@@ -245,13 +245,13 @@ body {
 <!-- Actions Section -->
 <section class="grid grid-cols-1 gap-6 mb-20 relative shadow-sm">
 <!-- Lugar Button -->
-<button class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
+<a href="/lugar" class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
 <div class="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-2xl" data-icon="location_on">location_on</span>
 </div>
 <span class="font-label uppercase tracking-[0.2em] text-[11px] font-semibold text-on-surface">Lugar</span>
 <span class="text-[9px] text-on-surface-variant mt-1 italic">Ver mapa y dirección</span>
-</button>
+</a>
 <!-- RSVP Button -->
 <button class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
 <div class="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
