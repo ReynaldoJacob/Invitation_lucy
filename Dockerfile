@@ -4,23 +4,29 @@ FROM php:8.1-apache
 RUN apt-get update && apt-get install -y \
     curl \
     git \
-    zip \
     unzip \
     libzip-dev \
     libpq-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
     pdo \
     pdo_mysql \
     zip \
+    gd \
     && a2enmod rewrite \
-    && apt-get clean
+    && rm -rf /var/lib/apt/lists/*
 
-# Instalar Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Instalar Composer (última versión)
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    composer self-update
 
-# Instalar Node.js
+# Instalar Node.js 18
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
 
 # Establecer directorio de trabajo
 WORKDIR /var/www/html
@@ -31,16 +37,17 @@ COPY . .
 # Configurar Apache
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
-# Instalar dependencias PHP
-RUN composer install --no-interaction --optimize-autoloader --no-dev
+# Instalar dependencias PHP (actualizar composer lock si es necesario)
+RUN composer install --no-interaction --no-dev --optimize-autoloader 2>&1 || \
+    (rm -f composer.lock && composer install --no-interaction --no-dev --optimize-autoloader)
 
 # Instalar dependencias Node.js
-RUN npm install
+RUN npm ci --only=production || npm install
 
 # Compilar assets
 RUN npm run build
 
-# Generar clave de aplicación si no existe
+# Generar clave de aplicación
 RUN php artisan key:generate --force || true
 
 # Configurar permisos
