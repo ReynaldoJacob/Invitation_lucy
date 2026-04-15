@@ -98,7 +98,7 @@ body {
     }
 .tangerine-bold {
     font-family: "Tangerine", cursive;
-    font-weight: 700;
+    font-weight: 800;
     font-style: normal;
 }
 .floral-header {
@@ -131,7 +131,43 @@ body {
     pointer-events: none;
     -webkit-mask-image: linear-gradient(to top, black 50%, transparent 100%);
     mask-image: linear-gradient(to top, black 50%, transparent 100%)
-    }</style>
+    }
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(0);
+    animation: ripple 0.6s ease-out;
+    pointer-events: none;
+}
+@keyframes bubble-pop-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+.scroll-reveal {
+    opacity: 0;
+    transform: scale(0.8) translateY(30px);
+}
+.scroll-reveal.visible {
+    animation: bubble-pop-in 0.6s ease-out forwards;
+}
+}</style>
 </head>
 <body class="text-on-surface selection:bg-primary-container selection:text-on-primary-container">
 <div class="relative min-h-screen flex flex-col max-w-lg mx-auto overflow-hidden bg-[#FCFAF2]">
@@ -139,7 +175,7 @@ body {
 <div class="floral-header"></div>
 <main class="relative z-10 flex-grow flex flex-col pt-36 px-12">
 <!-- Hero Section -->
-<section class="flex flex-col items-center justify-center text-center w-full mb-12">
+<section class="flex flex-col items-center justify-center text-center w-full mb-12 scroll-reveal">
 <div class="mb-4">
 <h2 class="script-text text-6xl md:text-7xl text-primary leading-tight">Shhh!</h2>
 <p class="font-label uppercase tracking-[0.4em] text-[10px] text-on-surface-variant/80">Es una sorpresa</p>
@@ -150,16 +186,16 @@ body {
 <div class="flex items-center justify-center w-full my-10">
 <div class="flex items-center gap-6 md:gap-8">
 <div class="flex flex-col items-end">
-<span class="serif-text text-lg md:text-xl font-medium text-primary/70 uppercase tracking-widest">Dom</span>
+<span class="serif-text text-lg md:text-xl font-medium text-primary/70 uppercase tracking-widest">Sab</span>
 </div>
 <div class="h-10 w-[0.5px] bg-primary/20"></div>
 <div class="flex flex-col items-center px-2">
-<span class="serif-text text-4xl md:text-5xl font-bold text-primary leading-none">28</span>
-<span class="serif-text text-[10px] md:text-[11px] text-primary/80 uppercase tracking-[0.3em] mt-1">Sep</span>
+<span class="serif-text text-4xl md:text-5xl font-bold text-primary leading-none">09</span>
+<span class="serif-text text-[10px] md:text-[11px] text-primary/80 uppercase tracking-[0.3em] mt-1">May</span>
 </div>
 <div class="h-10 w-[0.5px] bg-primary/20"></div>
 <div class="flex flex-col items-start">
-<span class="serif-text text-lg md:text-xl font-medium text-primary/70 tracking-tight">4:00pm</span>
+<span class="serif-text text-lg md:text-xl font-medium text-primary/70 tracking-tight">1:00pm</span>
 </div>
 </div>
 </div>
@@ -169,7 +205,9 @@ body {
 </div>
 <p class="text-on-surface-variant leading-relaxed italic serif-text text-xl">
                     ¿Nos ayudas a guardar el secreto?<br/>
-                    Te invitamos a celebrar los 65 de Lucy...<br/>
+                    <br>
+                    Te invitamos a celebrar a Lucy...<br/>
+                    <br>
                     Ella no lo sabe...<br/>
                     Ella no lo espera...<br/>
                     ¡Es una sorpresa!
@@ -177,33 +215,33 @@ body {
 </div>
 </section>
 <!-- Countdown Section -->
-<section class="mb-16 relative">
+<section class="mb-16 relative scroll-reveal">
 <div class="bg-white/40 backdrop-blur-sm rounded-full p-8 text-center relative overflow-hidden border border-primary/5 shadow-sm">
 <h3 class="font-label uppercase tracking-widest text-[10px] text-on-surface-variant/60 mb-6">Faltan para el momento</h3>
 <div class="grid grid-cols-4 gap-2">
 <div class="flex flex-col items-center">
-<span class="serif-text text-3xl font-bold text-primary">14</span>
+<span id="days" class="serif-text text-3xl font-bold text-primary">0</span>
 <span class="font-label text-[8px] uppercase tracking-wider text-on-surface-variant/70 mt-1">Días</span>
 </div>
 <div class="flex flex-col items-center">
-<span class="serif-text text-3xl font-bold text-primary">08</span>
+<span id="hours" class="serif-text text-3xl font-bold text-primary">0</span>
 <span class="font-label text-[8px] uppercase tracking-wider text-on-surface-variant/70 mt-1">Horas</span>
 </div>
 <div class="flex flex-col items-center">
-<span class="serif-text text-3xl font-bold text-primary">42</span>
+<span id="minutes" class="serif-text text-3xl font-bold text-primary">0</span>
 <span class="font-label text-[8px] uppercase tracking-wider text-on-surface-variant/70 mt-1">Mins</span>
 </div>
 <div class="flex flex-col items-center">
-<span class="serif-text text-3xl font-bold text-primary">15</span>
+<span id="seconds" class="serif-text text-3xl font-bold text-primary">0</span>
 <span class="font-label text-[8px] uppercase tracking-wider text-on-surface-variant/70 mt-1">Segs</span>
 </div>
 </div>
 </div>
 </section>
 <!-- Actions Section -->
-<section class="grid grid-cols-1 gap-6 mb-20 relative">
+<section class="grid grid-cols-1 gap-6 mb-20 relative shadow-sm">
 <!-- Lugar Button -->
-<button class="group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500">
+<button class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
 <div class="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-2xl" data-icon="location_on">location_on</span>
 </div>
@@ -211,8 +249,8 @@ body {
 <span class="text-[9px] text-on-surface-variant mt-1 italic">Ver mapa y dirección</span>
 </button>
 <!-- RSVP Button -->
-<button class="group flex flex-col items-center justify-center p-8 bg-primary text-on-primary rounded-3xl shadow-xl shadow-primary/10 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 relative overflow-hidden">
-<div class="w-12 h-12 rounded-full bg-on-primary/15 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-10">
+<button class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
+<div class="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-2xl" data-icon="mail">mail</span>
 </div>
 <span class="font-label uppercase tracking-[0.2em] text-[11px] font-semibold relative z-10">Confirmar Asistencia</span>
@@ -224,7 +262,7 @@ body {
 <div class="floral-footer"></div>
 </div>
 <!-- BottomNavBar -->
-<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-50 bg-[#FCFAF2]/90 backdrop-blur-xl border-t border-primary/5 flex justify-around items-center h-20 pb-safe px-8 shadow-[0_-10px_40px_rgba(129,82,83,0.05)]">
+<!-- <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-50 bg-[#FCFAF2]/90 backdrop-blur-xl border-t border-primary/5 flex justify-around items-center h-20 pb-safe px-8 shadow-[0_-10px_40px_rgba(129,82,83,0.05)]">
 <a class="flex flex-col items-center justify-center text-primary transition-all scale-105" href="#">
 <span class="material-symbols-outlined text-2xl" data-icon="auto_awesome">auto_awesome</span>
 <span class="font-label uppercase tracking-[0.15em] text-[9px] font-bold mt-1">Inicio</span>
@@ -237,5 +275,69 @@ body {
 <span class="material-symbols-outlined text-2xl" data-icon="mail">mail</span>
 <span class="font-label uppercase tracking-[0.15em] text-[9px] mt-1">RSVP</span>
 </a>
-</nav>
+</nav> -->
+<script>
+function updateCountdown() {
+    const targetDate = new Date(2026, 4, 9, 13, 0, 0).getTime();
+    const now = new Date().getTime();
+    const difference = targetDate - now;
+
+    if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((difference / 1000 / 60) % 60);
+        const seconds = Math.floor((difference / 1000) % 60);
+
+        document.getElementById('days').textContent = String(days).padStart(2, '0');
+        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+    }
+}
+
+// Ripple effect for buttons
+document.querySelectorAll('.ripple-button').forEach(button => {
+    button.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+
+        this.appendChild(ripple);
+
+        setTimeout(() => ripple.remove(), 600);
+    });
+});
+
+// Update countdown every second
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+// Scroll reveal animation with Intersection Observer
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+        }
+    });
+}, observerOptions);
+
+// Observe all scroll-reveal elements
+document.querySelectorAll('.scroll-reveal').forEach(el => {
+    observer.observe(el);
+});
+</script>
 </body></html>
