@@ -285,7 +285,7 @@
 <span class="text-[14rem] font-serif font-bold" style="color: rgba(244, 183, 184, 0.4);">65</span>
 </div>
 <!-- Content Section -->
-<section class="w-full space-y-12 z-10 scroll-reveal">
+<section class="w-full space-y-12 z-10">
 <!-- Title Header -->
 <div class="text-center space-y-2">
 <p class="font-label text-[10px] tracking-[0.4em] text-on-surface-variant/80 uppercase mb-2">RSVP</p>
@@ -295,7 +295,7 @@
 </div>
 
 <!-- RSVP Form Card -->
-<div class="w-full bg-white/40 backdrop-blur-sm p-8 rounded-3xl shadow-[0_4px_32px_rgba(129,82,83,0.05)] border border-primary/5 space-y-8 scroll-reveal">
+<div class="w-full bg-white/40 backdrop-blur-sm p-8 rounded-3xl shadow-[0_4px_32px_rgba(129,82,83,0.05)] border border-primary/5 space-y-8">
 
 <!-- Error Message -->
 <div x-show="errorMessage" class="bg-error-container text-on-error-container px-4 py-3 rounded-lg font-body text-sm">
@@ -345,7 +345,7 @@
 </div>
 
 <!-- Action Button -->
-<div class="flex flex-col items-center gap-8 scroll-reveal">
+<div class="flex flex-col items-center gap-8">
 <button @click="submitRsvp()" :disabled="isLoading || isSubmitting" class="w-full max-w-xs py-4 px-8 bg-primary text-on-primary font-label text-xs tracking-[0.2em] uppercase font-bold rounded-xl hover:bg-primary-container transition-all duration-300 shadow-xl active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
 <span x-show="!isSubmitting" x-text="linkId ? 'Confirmar' : 'Cargando...'"></span>
 <span x-show="isSubmitting">Enviando...</span>
@@ -427,18 +427,7 @@ Volver al inicio
 const observerOptions = {
 <script>
 function initRsvpPage() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-    document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
-
-    // Re-inicializar Alpine si es necesario tras navegación Turbo
+    // Reinicializar Alpine en navegaciones Turbo
     if (window.Alpine) {
         document.querySelectorAll('[x-data]').forEach(el => {
             if (!el._x_dataStack) window.Alpine.initTree(el);
@@ -446,7 +435,6 @@ function initRsvpPage() {
     }
 }
 
-document.addEventListener('turbo:render', initRsvpPage);
 initRsvpPage();
 </script>
 </body></html>
