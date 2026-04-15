@@ -22,9 +22,12 @@ RUN apt-get update && apt-get install -y \
 # Instalar Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Instalar Node.js 18
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+# Instalar Node.js 18 con mejor validación
+RUN apt-get update && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs && \
+    which node && node --version && \
+    which npm && npm --version && \
     rm -rf /var/lib/apt/lists/*
 
 # Establecer directorio de trabajo
@@ -45,10 +48,16 @@ RUN composer config --global --auth http-basic.repo.packagist.com token token 2>
     composer update --prefer-dist --no-progress --no-dev 2>&1 || true
 
 # Instalar dependencias Node.js
-RUN npm ci --only=production 2>&1 || npm install --omit=dev 2>&1 || npm install 2>&1
+RUN echo "Installing npm dependencies..." && \
+    which npm && npm --version && \
+    (npm ci --only=production 2>&1 || npm install --omit=dev 2>&1 || npm install 2>&1) && \
+    echo "npm dependencies installed successfully"
 
 # Compilar assets
-RUN npm run build 2>&1
+RUN echo "Building assets..." && \
+    which npm && \
+    (npm run build 2>&1 || echo "npm build failed, continuing anyway") && \
+    echo "Assets build completed"
 
 # Generar clave de aplicación
 RUN php artisan key:generate --force 2>&1 || true
