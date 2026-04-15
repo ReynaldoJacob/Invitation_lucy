@@ -104,34 +104,54 @@ body {
 .floral-header {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 320px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100%, 500px);
+    max-width: 600px;
+    height: 200px;
     background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAFwoqNm0aDz0YqD-LjAD6WPDkFAE10NXiS4WTvXcCiZ9e5zXB4s0MX_wwsyLEO4VBap8TZqY5ERibW82g5Ao-DTAeiCz-jMrruvXGhT4l5FMp9J7K827JjnCrdC8t0H2fuzphftXnxRS_XxCbyA6UxsTADqakXF-nBRl8gUcDNA8XzVPG3EffYXfcKTWB0qAfAQIussejCMT5NlEvJgK6n1XBqY_eUvsNp0m353fEuXCxB811uMUxMZoY-JitLGZ_2qOOrzlmAheE);
-    background-size: 100% auto;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: top center;
-    opacity: 0.9;
+    opacity: 0.85;
     z-index: 0;
     pointer-events: none;
-    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-    mask-image: linear-gradient(to bottom, black 50%, transparent 100%)
+    -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%)
     }
+@media (min-width: 768px) {
+    .floral-header {
+        height: 280px;
+        width: 90%;
+        max-width: 800px;
+    }
+}
 .floral-footer {
     position: relative;
-    width: 100%;
-    height: 320px;
+    width: min(100%, 500px);
+    max-width: 600px;
+    height: 180px;
+    margin-left: auto;
+    margin-right: auto;
     background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAFwoqNm0aDz0YqD-LjAD6WPDkFAE10NXiS4WTvXcCiZ9e5zXB4s0MX_wwsyLEO4VBap8TZqY5ERibW82g5Ao-DTAeiCz-jMrruvXGhT4l5FMp9J7K827JjnCrdC8t0H2fuzphftXnxRS_XxCbyA6UxsTADqakXF-nBRl8gUcDNA8XzVPG3EffYXfcKTWB0qAfAQIussejCMT5NlEvJgK6n1XBqY_eUvsNp0m353fEuXCxB811uMUxMZoY-JitLGZ_2qOOrzlmAheE);
-    background-size: 100% auto;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: bottom center;
-    opacity: 0.9;
+    opacity: 0.85;
     z-index: 0;
-    margin-top: -180px;
+    margin-top: 20px;
     pointer-events: none;
-    -webkit-mask-image: linear-gradient(to top, black 50%, transparent 100%);
-    mask-image: linear-gradient(to top, black 50%, transparent 100%)
+    -webkit-mask-image: linear-gradient(to top, black 40%, transparent 100%);
+    mask-image: linear-gradient(to top, black 40%, transparent 100%)
     }
+@media (min-width: 768px) {
+    .floral-footer {
+        height: 280px;
+        width: 90%;
+        max-width: 800px;
+        margin-top: 40px;
+    }
+}
 @keyframes ripple {
     0% {
         transform: scale(0);

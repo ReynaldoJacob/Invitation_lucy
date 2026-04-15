@@ -87,33 +87,53 @@
         .floral-header {
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(100%, 500px);
+            max-width: 600px;
+            height: 200px;
             background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAFwoqNm0aDz0YqD-LjAD6WPDkFAE10NXiS4WTvXcCiZ9e5zXB4s0MX_wwsyLEO4VBap8TZqY5ERibW82g5Ao-DTAeiCz-jMrruvXGhT4l5FMp9J7K827JjnCrdC8t0H2fuzphftXnxRS_XxCbyA6UxsTADqakXF-nBRl8gUcDNA8XzVPG3EffYXfcKTWB0qAfAQIussejCMT5NlEvJgK6n1XBqY_eUvsNp0m353fEuXCxB811uMUxMZoY-JitLGZ_2qOOrzlmAheE);
-            background-size: 100% auto;
+            background-size: cover;
             background-repeat: no-repeat;
             background-position: top center;
-            opacity: 0.9;
+            opacity: 0.85;
             z-index: 0;
             pointer-events: none;
-            -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-            mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+        @media (min-width: 768px) {
+            .floral-header {
+                height: 280px;
+                width: 90%;
+                max-width: 800px;
+            }
         }
         .floral-footer {
             position: relative;
-            width: 100%;
-            height: 320px;
+            width: min(100%, 500px);
+            max-width: 600px;
+            height: 180px;
+            margin-left: auto;
+            margin-right: auto;
             background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAFwoqNm0aDz0YqD-LjAD6WPDkFAE10NXiS4WTvXcCiZ9e5zXB4s0MX_wwsyLEO4VBap8TZqY5ERibW82g5Ao-DTAeiCz-jMrruvXGhT4l5FMp9J7K827JjnCrdC8t0H2fuzphftXnxRS_XxCbyA6UxsTADqakXF-nBRl8gUcDNA8XzVPG3EffYXfcKTWB0qAfAQIussejCMT5NlEvJgK6n1XBqY_eUvsNp0m353fEuXCxB811uMUxMZoY-JitLGZ_2qOOrzlmAheE);
-            background-size: 100% auto;
+            background-size: cover;
             background-repeat: no-repeat;
             background-position: bottom center;
-            opacity: 0.9;
+            opacity: 0.85;
             z-index: 0;
-            margin-top: 40px;
+            margin-top: 20px;
             pointer-events: none;
-            -webkit-mask-image: linear-gradient(to top, black 50%, transparent 100%);
-            mask-image: linear-gradient(to top, black 50%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, black 40%, transparent 100%);
+            mask-image: linear-gradient(to top, black 40%, transparent 100%);
+        }
+        @media (min-width: 768px) {
+            .floral-footer {
+                height: 280px;
+                width: 90%;
+                max-width: 800px;
+                margin-top: 40px;
+            }
         }
         body {
             min-height: max(884px, 100dvh);
@@ -199,13 +219,13 @@
 <!-- Floral Footer -->
 <div class="floral-footer"></div>
 <!-- Info Footer -->
-<footer class="w-full py-12 flex flex-col items-center gap-4 bg-transparent z-10 scroll-reveal">
+<!-- <footer class="w-full py-12 flex flex-col items-center gap-4 bg-transparent z-10 scroll-reveal">
 <p class="font-headline italic text-lg text-primary">Lucy's 65th Birthday • 2026</p>
 <div class="flex gap-8">
 <a class="font-body text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Contact</a>
 <a class="font-body text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Gift Registry</a>
 </div>
-</footer>
+</footer> -->
 </main>
 <!-- Bottom Navigation Bar -->
 <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-50 bg-[#FCFAF2]/90 backdrop-blur-xl border-t border-primary/5 flex justify-around items-center h-20 pb-safe px-8 shadow-[0_-10px_40px_rgba(129,82,83,0.05)]">
