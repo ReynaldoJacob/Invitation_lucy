@@ -273,6 +273,7 @@ function initLugarPage() {
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
 }
 
-document.addEventListener('turbo:load', initLugarPage);
+document.addEventListener('turbo:render', initLugarPage);
+initLugarPage();
 </script>
 </body></html>

@@ -446,6 +446,7 @@ function initRsvpPage() {
     }
 }
 
-document.addEventListener('turbo:load', initRsvpPage);
+document.addEventListener('turbo:render', initRsvpPage);
+initRsvpPage();
 </script>
 </body></html>

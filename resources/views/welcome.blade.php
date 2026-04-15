@@ -363,7 +363,8 @@ body {
         }, { once: true });
     }
 
-    document.addEventListener('turbo:load', initEnvelopeModal);
+    document.addEventListener('turbo:render', initEnvelopeModal);
+    initEnvelopeModal();
 
     window.toggleAudio = function() {
         const audio = document.getElementById('background-music');
@@ -610,6 +611,7 @@ function initWelcomePage() {
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
 }
 
-document.addEventListener('turbo:load', initWelcomePage);
+document.addEventListener('turbo:render', initWelcomePage);
+initWelcomePage();
 </script>
 </body></html>
