@@ -11,7 +11,7 @@
           <h2 class="script-text text-6xl md:text-7xl text-primary leading-tight">Shhh!</h2>
           <p class="font-label uppercase tracking-[0.4em] text-[10px] text-on-surface-variant/80">Es una sorpresa</p>
         </div>
-        <h1 class="tangerine-bold text-8xl md:text-9xl text-primary tracking-tight leading-none mb-6">
+        <h1 class="tangerine-bold text-[120px] md:text-[150px] text-primary tracking-tight leading-none mb-6">
           Lucy
         </h1>
          <!-- <h1 class="script-text text-8xl md:text-6xl font-bold text-primary tracking-tight leading-none mb-6">
