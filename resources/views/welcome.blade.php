@@ -294,7 +294,6 @@ body {
 }
 </style>
 <script>
-    // Definir funciones globalmente
     window.welcomePage = function() {
         return {
             linkId: new URLSearchParams(window.location.search).get('link_id'),
@@ -308,68 +307,21 @@ body {
         for (let i = 0; i < count; i++) {
             const bubble = document.createElement('div');
             bubble.className = 'bubble';
-
             const size     = 20 + Math.random() * 80;
             const x        = Math.random() * W;
             const duration = 0.8 + Math.random() * 1.0;
             const delay    = Math.random() * 0.6;
-            const drift    = (Math.random() - 0.5) * 400;  // -200 a +200px diagonal
-
-            bubble.style.cssText = `
-                width:${size}px; height:${size}px;
-                left:${x}px;
-                top:${H}px;
-                animation-duration:${duration}s;
-                animation-delay:${delay}s;
-                opacity:0;
-            `;
+            const drift    = (Math.random() - 0.5) * 400;
+            bubble.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${H}px;animation-duration:${duration}s;animation-delay:${delay}s;opacity:0;`;
             bubble.style.setProperty('--drift', `${drift}px`);
-
             document.body.appendChild(bubble);
             setTimeout(() => bubble.remove(), (duration + delay + 0.2) * 1000);
         }
     }
 
-    // Inicializar sobre: compatible con carga inicial y navegaciones Turbo
-    function initEnvelopeModal() {
-        const modal  = document.getElementById('envelope-modal');
-        const target = document.getElementById('envelope-click-target');
-        if (!modal || !target) return;          // página sin sobre, saltar
-        if (modal.dataset.initialized) return;  // ya inicializado
-        modal.dataset.initialized = '1';
-
-        const audio = document.getElementById('background-music');
-
-        // Si ya vio el sobre en esta sesión, quitarlo de inmediato
-        if (sessionStorage.getItem('envelopeOpened')) {
-            modal.remove();
-            return;
-        }
-
-        target.addEventListener('click', () => {
-            sessionStorage.setItem('envelopeOpened', '1');
-            if (audio) audio.play().catch(err => console.log(err));
-
-            // 1. Cerrar modal con fade
-            modal.style.transition = 'opacity 0.7s ease';
-            modal.style.opacity = '0';
-            modal.style.pointerEvents = 'none';
-
-            setTimeout(() => {
-                modal.remove();
-                // 2. Después del cierre: lluvia masiva de burbujas
-                spawnBubbles(160);
-            }, 700);
-        }, { once: true });
-    }
-
-    document.addEventListener('DOMContentLoaded', initEnvelopeModal);
-    document.addEventListener('turbo:render', initEnvelopeModal);
-
     window.toggleAudio = function() {
         const audio = document.getElementById('background-music');
         const btn = document.getElementById('audio-state');
-
         if (audio.paused) {
             audio.muted = false;
             audio.play().catch(e => console.log('Play prevented:', e));
@@ -381,7 +333,6 @@ body {
     };
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.12/dist/turbo.es2017-umd.js"></script>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="text-on-surface selection:bg-primary-container selection:text-on-primary-container" x-data="welcomePage()">
@@ -427,7 +378,7 @@ body {
 </div>
 
 <!-- Audio Player Global -->
-<audio id="background-music" loop style="display: none;" data-turbo-permanent>
+<audio id="background-music" loop style="display: none;">
 <source src="/hasta-mi-final.mp4" type="audio/mp4">
 </audio>
 
@@ -575,13 +526,38 @@ function updateCountdown() {
     }
 }
 
+function initEnvelopeModal() {
+    const modal  = document.getElementById('envelope-modal');
+    const target = document.getElementById('envelope-click-target');
+    if (!modal || !target) return;
+
+    const audio = document.getElementById('background-music');
+
+    if (sessionStorage.getItem('envelopeOpened')) {
+        modal.remove();
+        return;
+    }
+
+    target.addEventListener('click', () => {
+        sessionStorage.setItem('envelopeOpened', '1');
+        if (audio) audio.play().catch(err => console.log(err));
+
+        modal.style.transition = 'opacity 0.7s ease';
+        modal.style.opacity = '0';
+        modal.style.pointerEvents = 'none';
+
+        setTimeout(() => {
+            modal.remove();
+            spawnBubbles(160);
+        }, 700);
+    }, { once: true });
+}
+
 function initWelcomePage() {
-    // Limpiar interval anterior si existe
     clearInterval(window._countdownInterval);
     window._countdownInterval = setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // Ripple effect for buttons
     document.querySelectorAll('.ripple-button').forEach(button => {
         button.addEventListener('click', function(e) {
             const ripple = document.createElement('span');
@@ -598,19 +574,21 @@ function initWelcomePage() {
         });
     });
 
-    // Scroll reveal
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
 }
 
-initWelcomePage();
+document.addEventListener('DOMContentLoaded', function() {
+    initEnvelopeModal();
+    initWelcomePage();
+});
 </script>
 </body></html>

@@ -85,13 +85,12 @@
                 transform: scale(1) translateY(0);
             }
         }
-        .scroll-reveal {
-            opacity: 0;
-            transform: scale(0.8) translateY(30px);
+        .rsvp-fade-in {
+            animation: bubble-pop-in 0.6s ease-out both;
         }
-        .scroll-reveal.visible {
-            animation: bubble-pop-in 0.6s ease-out forwards;
-        }
+        .rsvp-fade-in:nth-child(1) { animation-delay: 0.05s; }
+        .rsvp-fade-in:nth-child(2) { animation-delay: 0.15s; }
+        .rsvp-fade-in:nth-child(3) { animation-delay: 0.25s; }
     </style>
 <script id="tailwind-config">
       tailwind.config = {
@@ -268,12 +267,11 @@
     };
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.12/dist/turbo.es2017-umd.js"></script>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-[#FCFAF2] text-on-surface min-h-screen flex flex-col items-center selection:bg-primary-fixed-dim selection:text-on-primary-fixed overflow-x-hidden" x-data="rsvpForm()" x-init="init()">
 <!-- Audio Player Global -->
-<audio id="background-music" loop style="display: none;" data-turbo-permanent>
+<audio id="background-music" loop style="display: none;">
 <source src="/hasta-mi-final.mp4" type="audio/mp4">
 </audio>
 <div class="relative min-h-screen w-full max-w-lg mx-auto flex flex-col overflow-hidden bg-[#FCFAF2]">
@@ -285,7 +283,7 @@
 <span class="text-[14rem] font-serif font-bold" style="color: rgba(244, 183, 184, 0.4);">65</span>
 </div>
 <!-- Content Section -->
-<section class="w-full space-y-12 z-10">
+<section class="w-full space-y-12 z-10 rsvp-fade-in">
 <!-- Title Header -->
 <div class="text-center space-y-2">
 <p class="font-label text-[10px] tracking-[0.4em] text-on-surface-variant/80 uppercase mb-2">RSVP</p>
@@ -295,7 +293,7 @@
 </div>
 
 <!-- RSVP Form Card -->
-<div class="w-full bg-white/40 backdrop-blur-sm p-8 rounded-3xl shadow-[0_4px_32px_rgba(129,82,83,0.05)] border border-primary/5 space-y-8">
+<div class="w-full bg-white/40 backdrop-blur-sm p-8 rounded-3xl shadow-[0_4px_32px_rgba(129,82,83,0.05)] border border-primary/5 space-y-8 rsvp-fade-in">
 
 <!-- Error Message -->
 <div x-show="errorMessage" class="bg-error-container text-on-error-container px-4 py-3 rounded-lg font-body text-sm">
@@ -345,7 +343,7 @@
 </div>
 
 <!-- Action Button -->
-<div class="flex flex-col items-center gap-8">
+<div class="flex flex-col items-center gap-8 rsvp-fade-in">
 <button @click="submitRsvp()" :disabled="isLoading || isSubmitting" class="w-full max-w-xs py-4 px-8 bg-primary text-on-primary font-label text-xs tracking-[0.2em] uppercase font-bold rounded-xl hover:bg-primary-container transition-all duration-300 shadow-xl active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
 <span x-show="!isSubmitting" x-text="linkId ? 'Confirmar' : 'Cargando...'"></span>
 <span x-show="isSubmitting">Enviando...</span>

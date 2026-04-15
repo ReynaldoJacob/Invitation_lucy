@@ -174,12 +174,11 @@
         }
     };
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.12/dist/turbo.es2017-umd.js"></script>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-[#FCFAF2] text-on-surface font-body min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed" x-data="lugarPage()">
 <!-- Audio Player Global -->
-<audio id="background-music" loop style="display: none;" data-turbo-permanent>
+<audio id="background-music" loop style="display: none;">
 <source src="/hasta-mi-final.mp4" type="audio/mp4">
 </audio>
 <div class="relative min-h-screen flex flex-col max-w-lg mx-auto overflow-hidden bg-[#FCFAF2]">
