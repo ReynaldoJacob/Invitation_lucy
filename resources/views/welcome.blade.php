@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html class="light" lang="es"><head>
+<html class="light" lang="en"><head>
 <meta charset="utf-8"/>
 <meta name="csrf-token" content="{{ csrf_token() }}"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -188,6 +188,92 @@ body {
 .scroll-reveal.visible {
     animation: bubble-pop-in 0.6s ease-out forwards;
 }
+
+/* ── Envelope Modal ── */
+#envelope-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background-color: #FCFAF2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease;
+    overflow: hidden;
+}
+.envelope-container { perspective: 1000px; }
+.envelope {
+    position: relative;
+    width: 320px;
+    height: 220px;
+    background-color: #fbf9f1;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 10px 30px rgba(27, 28, 23, 0.08);
+    cursor: pointer;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.envelope:hover { transform: translateY(-5px) scale(1.02); }
+.envelope-flap {
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 0;
+    border-left: 160px solid transparent;
+    border-right: 160px solid transparent;
+    border-top: 120px solid #f0eee6;
+    transform-origin: top;
+    transition: transform 0.6s 0.2s ease-in-out;
+    z-index: 3;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.05));
+}
+.envelope-flap-inner {
+    position: absolute;
+    top: -120px; left: -160px;
+    width: 0; height: 0;
+    border-left: 160px solid transparent;
+    border-right: 160px solid transparent;
+    border-top: 118px solid #ffdada;
+    opacity: 0.2;
+}
+.envelope-body {
+    position: absolute;
+    bottom: 0; width: 100%; height: 100%;
+    background-color: #fbf9f1;
+    z-index: 2;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, 160px 110px, 0 0);
+}
+.card-inside {
+    position: absolute;
+    top: 10px; left: 50%;
+    transform: translateX(-50%);
+    width: 290px; height: 200px;
+    background: white;
+    z-index: 1;
+    transition: transform 0.8s 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(213, 194, 194, 0.2);
+}
+.wax-seal {
+    position: absolute;
+    top: 100px; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px; height: 44px;
+    background: radial-gradient(circle at 30% 30%, #c89091, #815253);
+    border-radius: 50%;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(129, 82, 83, 0.3);
+    transition: opacity 0.3s ease;
+}
+.envelope-wrapper:hover .envelope-flap { transform: rotateX(180deg); z-index: 0; }
+.envelope-wrapper:hover .card-inside   { transform: translate(-50%, -100px); }
+.envelope-wrapper:hover .wax-seal      { opacity: 0; }
 </style>
 <script>
     // Definir funciones globalmente
@@ -197,51 +283,23 @@ body {
         }
     };
 
-    // Sistema de audio global que persiste entre páginas
-    window.initGlobalAudio = function() {
-        const audio = document.getElementById('background-music');
-        if (!audio) return;
+    // Inicializar audio: play directo en clic del sobre (gesto real del usuario)
+    window.addEventListener('DOMContentLoaded', () => {
+        const audio  = document.getElementById('background-music');
+        const modal  = document.getElementById('envelope-modal');
+        const target = document.getElementById('envelope-click-target');
+        if (!audio || !modal || !target) return;
 
-        // Restaurar estado anterior
-        const savedTime = sessionStorage.getItem('musicTime');
-        const wasPaused = sessionStorage.getItem('musicPaused') === 'true';
+        target.addEventListener('click', () => {
+            // Gesto directo del usuario → sin restricciones de autoplay
+            audio.play().catch(e => console.log(e));
 
-        console.log('Restoring audio:', {savedTime, wasPaused, currentTime: audio.currentTime, paused: audio.paused});
-
-        // Solo restaurar el tiempo, no reproducir de nuevo
-        if (savedTime) {
-            audio.currentTime = parseFloat(savedTime);
-            console.log('Time restored to:', audio.currentTime);
-        }
-
-        // Si estaba pausado, pausar
-        if (wasPaused && !audio.paused) {
-            audio.pause();
-        }
-        // Si estaba reproduciéndose y está pausado, reproducir
-        else if (!wasPaused && audio.paused) {
-            audio.muted = false;
-            audio.play().catch(e => console.log('Auto-play prevented:', e));
-        }
-
-        // Guardar estado periódicamente
-        setInterval(() => {
-            if (audio) {
-                sessionStorage.setItem('musicTime', audio.currentTime);
-                sessionStorage.setItem('musicPaused', audio.paused);
-            }
-        }, 500);
-
-        // Guardar antes de salir
-        window.addEventListener('beforeunload', () => {
-            if (audio) {
-                sessionStorage.setItem('musicTime', audio.currentTime);
-                sessionStorage.setItem('musicPaused', audio.paused);
-            }
+            // Cerrar modal con fade
+            modal.style.opacity = '0';
+            modal.style.pointerEvents = 'none';
+            setTimeout(() => modal.remove(), 800);
         });
-    }
-
-    window.addEventListener('load', window.initGlobalAudio);
+    });
 
     window.toggleAudio = function() {
         const audio = document.getElementById('background-music');
@@ -249,72 +307,65 @@ body {
 
         if (audio.paused) {
             audio.muted = false;
-            audio.play().catch(e => {
-                console.log('Play prevented:', e);
-            });
-            btn.textContent = '⏸ Pausar';
+            audio.play().catch(e => console.log('Play prevented:', e));
+            if (btn) btn.textContent = '⏸ Pausar';
         } else {
             audio.pause();
-            btn.textContent = '▶ Reproducir';
+            if (btn) btn.textContent = '▶ Reproducir';
         }
     };
 
-    // Permitir autoplay después de interacción
-    document.addEventListener('click', () => {
-        const audio = document.getElementById('background-music');
-        if (audio && audio.paused) {
-            audio.muted = false;
-            audio.play().catch(e => console.log('Play error:', e));
-        }
-    }, { once: true });
-
-    // Guardar estado de audio antes de navegar
-    document.addEventListener('click', (e) => {
-        const audio = document.getElementById('background-music');
-        if (!audio) return;
-
-        // Si el click es en un link interno, guardar el estado
-        const link = e.target.closest('a[href^="/"]');
-        if (link) {
-            sessionStorage.setItem('musicTime', audio.currentTime);
-            sessionStorage.setItem('musicPaused', audio.paused);
-            console.log('Audio state saved:', {time: audio.currentTime, paused: audio.paused});
-        }
-    });
-
-    // Intentar reproducir inmediatamente
-    setTimeout(() => {
-        const audio = document.getElementById('background-music');
-
-        // Restaurar estado anterior
-        const savedTime = sessionStorage.getItem('musicTime');
-        const wasPaused = sessionStorage.getItem('musicPaused') === 'true';
-
-        if (savedTime) {
-            audio.currentTime = parseFloat(savedTime);
-        }
-
-        // Intentar reproducir
-        if (!wasPaused) {
-            audio.play().catch(error => {
-                console.log('Autoplay bloqueado:', error);
-            });
-        }
-
-        // Guardar estado periódicamente
-        setInterval(() => {
-            sessionStorage.setItem('musicTime', audio.currentTime);
-            sessionStorage.setItem('musicPaused', audio.paused);
-        }, 1000);
-    }, 500);
 </script>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="text-on-surface selection:bg-primary-container selection:text-on-primary-container" x-data="welcomePage()">
+
+<!-- ── Envelope Modal ── -->
+<div id="envelope-modal">
+  <!-- Floral header dentro del modal -->
+  <div class="floral-header"></div>
+
+  <div class="text-center mb-8 relative z-10">
+    <p class="font-label uppercase tracking-[0.3em] text-[11px] text-on-surface-variant/70 mb-4">Estás cordialmente invitado</p>
+    <div class="h-px w-12 bg-primary mx-auto opacity-30"></div>
+  </div>
+
+  <!-- Sobre interactivo -->
+  <div class="envelope-wrapper group cursor-pointer relative z-10" id="envelope-click-target">
+    <div class="envelope-container">
+      <div class="envelope">
+        <div class="envelope-flap">
+          <div class="envelope-flap-inner"></div>
+        </div>
+        <div class="wax-seal">
+          <span class="material-symbols-outlined text-white text-lg" style="font-variation-settings: 'FILL' 1;">favorite</span>
+        </div>
+        <div class="card-inside shadow-sm">
+          <div class="text-center">
+            <span class="font-headline text-4xl text-primary-container opacity-60 block mb-1">65</span>
+            <h1 class="font-headline text-2xl text-primary mb-3">Lucy</h1>
+            <p class="font-label uppercase tracking-[0.2em] text-[9px] text-on-surface-variant">A Heritage Celebration</p>
+          </div>
+        </div>
+        <div class="envelope-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="mt-12 font-label text-[11px] tracking-[0.3em] uppercase text-on-surface-variant/60 animate-pulse text-center relative z-10">
+    Presiona el sobre para descubrir la invitación
+  </p>
+
+  <!-- Floral footer dentro del modal -->
+  <div class="floral-footer" style="position: absolute; bottom: 0; margin-top: 0;"></div>
+</div>
+
 <!-- Audio Player Global -->
-<audio id="background-music" loop muted style="display: none;">
+<audio id="background-music" loop style="display: none;">
 <source src="/hasta-mi-final.mp4" type="audio/mp4">
 </audio>
+
+
 
 <div class="relative min-h-screen flex flex-col max-w-lg mx-auto overflow-hidden bg-[#FCFAF2]">
 <!-- Floral Header Decorative Element -->
