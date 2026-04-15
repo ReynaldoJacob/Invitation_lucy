@@ -157,8 +157,16 @@
             animation: bubble-pop-in 0.6s ease-out forwards;
         }
     </style>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script>
+    function lugarPage() {
+        return {
+            linkId: new URLSearchParams(window.location.search).get('link_id'),
+        }
+    }
+</script>
 </head>
-<body class="bg-[#FCFAF2] text-on-surface font-body min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed">
+<body class="bg-[#FCFAF2] text-on-surface font-body min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed" x-data="lugarPage()">
 <div class="relative min-h-screen flex flex-col max-w-lg mx-auto overflow-hidden bg-[#FCFAF2]">
 <!-- Floral Header -->
 <div class="floral-header"></div>
@@ -222,7 +230,7 @@
 </div>
 <!-- Bottom Navigation Bar -->
 <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-50 bg-[#FCFAF2]/90 backdrop-blur-xl border-t border-primary/5 flex justify-around items-center h-20 pb-safe px-8 shadow-[0_-10px_40px_rgba(129,82,83,0.05)]">
-<a href="/" class="flex flex-col items-center justify-center text-on-surface-variant/40 hover:text-primary transition-all">
+<a :href="linkId ? '/?link_id=' + linkId : '/'" class="flex flex-col items-center justify-center text-on-surface-variant/40 hover:text-primary transition-all">
 <span class="material-symbols-outlined text-2xl" data-icon="auto_awesome">auto_awesome</span>
 <span class="font-label uppercase tracking-[0.15em] text-[9px] mt-1">Inicio</span>
 </a>
@@ -230,7 +238,7 @@
 <span class="material-symbols-outlined text-2xl" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
 <span class="font-label uppercase tracking-[0.15em] text-[9px] font-bold mt-1">Lugar</span>
 </button>
-<a href="/rsvp" class="flex flex-col items-center justify-center text-on-surface-variant/40 hover:text-primary transition-all">
+<a :href="linkId ? '/rsvp?link_id=' + linkId : '/rsvp'" class="flex flex-col items-center justify-center text-on-surface-variant/40 hover:text-primary transition-all">
 <span class="material-symbols-outlined text-2xl" data-icon="mail">mail</span>
 <span class="font-label uppercase tracking-[0.15em] text-[9px] mt-1">RSVP</span>
 </a>

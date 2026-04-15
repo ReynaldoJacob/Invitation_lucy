@@ -2,6 +2,7 @@
 
 <html class="light" lang="es"><head>
 <meta charset="utf-8"/>
+<meta name="csrf-token" content="{{ csrf_token() }}"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Lucy's Celebration - Una Sorpresa Elegante</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -188,11 +189,20 @@ body {
     animation: bubble-pop-in 0.6s ease-out forwards;
 }
 </style>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script>
+    function welcomePage() {
+        return {
+            linkId: new URLSearchParams(window.location.search).get('link_id'),
+        }
+    }
+</script>
 </head>
-<body class="text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<body class="text-on-surface selection:bg-primary-container selection:text-on-primary-container" x-data="welcomePage()">
 <div class="relative min-h-screen flex flex-col max-w-lg mx-auto overflow-hidden bg-[#FCFAF2]">
 <!-- Floral Header Decorative Element -->
 <div class="floral-header"></div>
+
 <main class="relative z-10 flex-grow flex flex-col pt-36 px-12">
 <!-- Hero Section -->
 <section class="flex flex-col items-center justify-center text-center w-full mb-12 scroll-reveal">
@@ -265,7 +275,7 @@ body {
 <!-- Actions Section -->
 <section class="grid grid-cols-1 gap-6 mb-20 relative shadow-sm">
 <!-- Lugar Button -->
-<a href="/lugar" class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
+<a :href="linkId ? '/lugar?link_id=' + linkId : '/lugar'" class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
 <div class="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-2xl" data-icon="location_on">location_on</span>
 </div>
@@ -273,7 +283,7 @@ body {
 <span class="text-[9px] text-on-surface-variant mt-1 italic">Ver mapa y dirección</span>
 </a>
 <!-- RSVP Button -->
-<a href="/rsvp" class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
+<a :href="linkId ? '/rsvp?link_id=' + linkId : '/rsvp'" class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
 <div class="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-2xl" data-icon="mail">mail</span>
 </div>

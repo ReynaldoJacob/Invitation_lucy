@@ -1,16 +1,40 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
-# Generar clave de aplicación si no existe
-if [ -z "$APP_KEY" ]; then
-    php artisan key:generate --force || true
-fi
+echo "======= DEBUG VARIABLES ======="
+echo "DB_HOST:     ${DB_HOST}"
+echo "DB_PORT:     ${DB_PORT}"
+echo "DB_DATABASE: ${DB_DATABASE}"
+echo "DB_USERNAME: ${DB_USERNAME}"
+echo "DB_PASSWORD set: $([ -n "$DB_PASSWORD" ] && echo 'SI' || echo 'NO')"
+echo "APP_KEY set: $([ -n "$APP_KEY" ] && echo 'SI' || echo 'NO')"
+echo "==============================="
 
-# Ejecutar migraciones si es necesario (comentado por ahora)
-# php artisan migrate --force
+echo "→ Esperando que MySQL esté listo..."
+until php -r "
+try {
+  \$pdo = new PDO('mysql:host=${DB_HOST};port=${DB_PORT:-3306};dbname=${DB_DATABASE}', '${DB_USERNAME}', '${DB_PASSWORD}');
+  echo 'Conectado OK';
+} catch (Exception \$e) {
+  exit(1);
+}
+"; do
+  echo "   MySQL no disponible, reintentando en 3s..."
+  sleep 3
+done
 
+echo "→ Ejecutando migraciones..."
+php artisan migrate --force
 
-echo "Starting Lucy's Celebration on port $PORT..."
+echo "→ Ejecutando seeders..."
+php artisan db:seed --force
 
-# Iniciar aplicación en el puerto correcto
+echo "→ Enlazando storage..."
+php artisan storage:link 2>/dev/null || true
+
+echo "→ Cacheando rutas y vistas..."
+php artisan route:cache
+php artisan view:cache
+
+echo "→ Iniciando servidor en puerto ${PORT:-8000}..."
 php artisan serve --host=0.0.0.0 --port="${PORT:-8000}"

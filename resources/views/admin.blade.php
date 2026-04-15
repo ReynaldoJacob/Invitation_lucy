@@ -2,6 +2,7 @@
 
 <html class="light" lang="es"><head>
 <meta charset="utf-8"/>
+<meta name="csrf-token" content="{{ csrf_token() }}"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Celebration Admin - Lucy's 65th Birthday</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -89,8 +90,94 @@
           min-height: max(884px, 100dvh);
         }
     </style>
-<script defer="" src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script></head>
-<body class="bg-background text-on-surface min-h-screen relative selection:bg-primary-fixed" style="background-color: #fbf9f1;" x-data="{ isModalOpen: false }">
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script>
+    function adminPanel() {
+        return {
+            isModalOpen: false,
+            familyName: '',
+            isLoading: false,
+            generatedLink: '',
+            errorMessage: '',
+            families: [],
+            totalConfirmed: 0,
+            totalGuests: 0,
+            isLoadingFamilies: true,
+
+            async createInvitation() {
+                this.isLoading = true;
+                this.errorMessage = '';
+
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    const response = await fetch('/api/families', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                        body: JSON.stringify({ family_name: this.familyName })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        this.generatedLink = data.link;
+                        this.familyName = '';
+                        this.loadFamilies();
+                    } else {
+                        this.errorMessage = data.message || 'Error al generar la invitación';
+                    }
+                } catch (error) {
+                    this.errorMessage = 'Error: ' + error.message;
+                } finally {
+                    this.isLoading = false;
+                }
+            },
+
+            async loadFamilies() {
+                this.isLoadingFamilies = true;
+                try {
+                    const response = await fetch('/api/families-list');
+                    const data = await response.json();
+                    this.families = data.families;
+                    this.totalConfirmed = data.total_confirmed;
+                    this.totalGuests = data.total_guests;
+                } catch (error) {
+                    console.error('Error loading families:', error);
+                } finally {
+                    this.isLoadingFamilies = false;
+                }
+            },
+
+            copyToClipboard() {
+                navigator.clipboard.writeText(this.generatedLink);
+            },
+
+            getConfirmationStatus(family) {
+                if (family.attending === null) {
+                    return 'Pendiente';
+                }
+                return family.attending ? 'Confirmado' : 'No asistirá';
+            },
+
+            getGuestDisplay(family) {
+                if (!family.attending) {
+                    return 'No asiste';
+                }
+                if (family.guest_count === 0) {
+                    return 'Solo contacto';
+                }
+                return `Contacto + ${family.guest_count}`;
+            },
+
+            init() {
+                this.loadFamilies();
+            }
+        }
+    }
+</script>
+</head>
+<body class="bg-background text-on-surface min-h-screen relative selection:bg-primary-fixed" style="background-color: #fbf9f1;" x-data="adminPanel()" x-init="init()">
 <!-- TopAppBar -->
 <header class="w-full top-0 sticky bg-[#fbf9f1] dark:bg-stone-950 z-50" style="background-color: #fbf9f1;">
 <div class="flex items-center justify-between px-6 py-4 w-full max-w-full">
@@ -122,8 +209,9 @@
 <h2 class="font-headline text-3xl text-primary">Panel de Control</h2>
 </div>
 <div class="bg-surface-container-low px-10 py-6 rounded-xl text-center border border-outline-variant/10">
-<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Total de Confirmados</p>
-<span class="font-headline text-5xl font-bold text-primary">48</span>
+<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Personas Confirmadas</p>
+<span class="font-headline text-5xl font-bold text-primary" x-text="totalConfirmed"></span>
+<p class="font-label text-[8px] uppercase tracking-wider text-on-surface-variant/60 mt-2">(Incluyendo contactos principales)</p>
 </div>
 </div>
 </section>
@@ -131,75 +219,47 @@
 <section class="bg-surface-container-low/50 backdrop-blur-sm rounded-xl p-6 md:p-10 border border-outline-variant/10">
 <div class="flex items-center justify-between mb-8">
 <h3 class="font-headline text-2xl text-on-surface">Lista de Invitados</h3>
-<button @click="isModalOpen = true" class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-on-primary-fixed-variant transition-all shadow-sm mr-4 active:scale-95"><span class="material-symbols-outlined text-sm">person_add</span><span class="text-xs font-label uppercase tracking-widest">Add Guest</span></button>
+<button @click="isModalOpen = true" class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-on-primary-fixed-variant transition-all shadow-sm mr-4 active:scale-95"><span class="material-symbols-outlined text-sm">person_add</span><span class="text-xs font-label uppercase tracking-widest">Crear invitación</span></button>
 </div>
+
+<!-- Loading State -->
+<div x-show="isLoadingFamilies" class="text-center py-10">
+<p class="font-body text-on-surface-variant">Cargando familias...</p>
+</div>
+
+<!-- Empty State -->
+<div x-show="!isLoadingFamilies && families.length === 0" class="text-center py-10">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant/30 block mb-2">inbox</span>
+<p class="font-body text-on-surface-variant">No hay familias registradas aún</p>
+</div>
+
 <!-- Table-like List -->
-<div class="space-y-4">
+<div x-show="!isLoadingFamilies && families.length > 0" class="space-y-4">
 <!-- Column Headers -->
 <div class="grid grid-cols-12 px-6 py-2">
-<div class="col-span-8 md:col-span-9 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/70">Nombre</div>
-<div class="col-span-4 md:col-span-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/70 text-right">Asistentes</div>
+<div class="col-span-4 md:col-span-5 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/70">Familia</div>
+<div class="col-span-3 md:col-span-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/70">Estado</div>
+<div class="col-span-5 md:col-span-4 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/70 text-right">Asistentes</div>
 </div>
-<!-- Guest Item -->
+
+<!-- Guest Items -->
+<template x-for="family in families" :key="family.id">
 <div class="grid grid-cols-12 items-center px-6 py-5 bg-surface-container-lowest rounded-lg hover:bg-surface-container transition-colors duration-200">
-<div class="col-span-8 md:col-span-9">
-<span class="font-headline text-xl text-on-surface block">Mariana Rodríguez</span>
-<span class="text-xs text-on-surface-variant italic">Confirmado hace 2 horas</span>
+<div class="col-span-4 md:col-span-5">
+<span class="font-headline text-base md:text-lg text-on-surface block" x-text="family.family_name"></span>
+<span class="text-xs text-on-surface-variant italic" x-text="family.contact_name ? 'Contacto: ' + family.contact_name : 'Sin contacto'"></span>
 </div>
-<div class="col-span-4 md:col-span-3 text-right">
-<span class="bg-primary-fixed/40 text-on-primary-fixed-variant px-3 py-1 rounded-full font-label text-sm font-medium">
-                            +2 Acompañantes
-                        </span>
+<div class="col-span-3 md:col-span-3">
+<span class="px-3 py-1 rounded-full font-label text-xs font-medium"
+      :class="family.attending === null ? 'bg-orange-100 text-orange-700' : family.attending ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
+      x-text="getConfirmationStatus(family)"></span>
 </div>
-</div>
-<!-- Guest Item -->
-<div class="grid grid-cols-12 items-center px-6 py-5 bg-surface-container-lowest rounded-lg hover:bg-surface-container transition-colors duration-200">
-<div class="col-span-8 md:col-span-9">
-<span class="font-headline text-xl text-on-surface block">Roberto Gómez</span>
-<span class="text-xs text-on-surface-variant italic">Confirmado ayer</span>
-</div>
-<div class="col-span-4 md:col-span-3 text-right">
-<span class="bg-primary-fixed/40 text-on-primary-fixed-variant px-3 py-1 rounded-full font-label text-sm font-medium">
-                            Individual
-                        </span>
+<div class="col-span-5 md:col-span-4 text-right">
+<span x-show="family.attending" class="bg-primary-fixed/40 text-on-primary-fixed-variant px-3 py-1 rounded-full font-label text-xs md:text-sm font-medium" x-text="getGuestDisplay(family)"></span>
+<span x-show="!family.attending" class="text-on-surface-variant text-xs md:text-sm">—</span>
 </div>
 </div>
-<!-- Guest Item -->
-<div class="grid grid-cols-12 items-center px-6 py-5 bg-surface-container-lowest rounded-lg hover:bg-surface-container transition-colors duration-200">
-<div class="col-span-8 md:col-span-9">
-<span class="font-headline text-xl text-on-surface block">Familia Martínez Silva</span>
-<span class="text-xs text-on-surface-variant italic">Confirmado hace 3 días</span>
-</div>
-<div class="col-span-4 md:col-span-3 text-right">
-<span class="bg-primary-fixed/40 text-on-primary-fixed-variant px-3 py-1 rounded-full font-label text-sm font-medium">
-                            +4 Acompañantes
-                        </span>
-</div>
-</div>
-<!-- Guest Item -->
-<div class="grid grid-cols-12 items-center px-6 py-5 bg-surface-container-lowest rounded-lg hover:bg-surface-container transition-colors duration-200">
-<div class="col-span-8 md:col-span-9">
-<span class="font-headline text-xl text-on-surface block">Lucía Fernández</span>
-<span class="text-xs text-on-surface-variant italic">Confirmado hace 4 días</span>
-</div>
-<div class="col-span-4 md:col-span-3 text-right">
-<span class="bg-primary-fixed/40 text-on-primary-fixed-variant px-3 py-1 rounded-full font-label text-sm font-medium">
-                            +1 Acompañante
-                        </span>
-</div>
-</div>
-<!-- Guest Item -->
-<div class="grid grid-cols-12 items-center px-6 py-5 bg-surface-container-lowest rounded-lg hover:bg-surface-container transition-colors duration-200">
-<div class="col-span-8 md:col-span-9">
-<span class="font-headline text-xl text-on-surface block">Carlos &amp; Elena Ruiz</span>
-<span class="text-xs text-on-surface-variant italic">Confirmado hace 1 semana</span>
-</div>
-<div class="col-span-4 md:col-span-3 text-right">
-<span class="bg-primary-fixed/40 text-on-primary-fixed-variant px-3 py-1 rounded-full font-label text-sm font-medium">
-                            +1 Acompañante
-                        </span>
-</div>
-</div>
+</template>
 </div>
 </section>
 </main>
@@ -227,14 +287,43 @@
 <h3 class="font-headline text-2xl text-primary">Nueva Invitación</h3>
 <button @click="isModalOpen = false" class="material-symbols-outlined text-on-surface-variant hover:text-primary">close</button>
 </div>
-<div class="space-y-6">
+
+<!-- Form or Generated Link View -->
+<div x-show="!generatedLink" class="space-y-6">
 <div>
 <label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Nombre del Invitado o Familia</label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-lg py-3 px-4 focus:ring-primary focus:border-primary font-body text-on-surface placeholder:text-on-surface-variant/40" placeholder="Ej. Familia Martínez Silva" type="text"/>
+<input x-model="familyName" class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-3 px-4 focus:ring-primary focus:border-primary font-body text-on-surface placeholder:text-on-surface-variant/40" placeholder="Ej. Familia Martínez Silva" type="text"/>
 </div>
-<button @click="isModalOpen = false" class="w-full bg-primary text-white py-4 rounded-xl font-label uppercase tracking-widest text-sm font-bold shadow-lg hover:shadow-primary/20 transition-all active:scale-95">
-                    Generar Link
-                </button>
+
+<div x-show="errorMessage" class="bg-error-container text-on-error-container px-4 py-3 rounded-lg font-body text-sm">
+<p x-text="errorMessage"></p>
+</div>
+
+<button @click="createInvitation()" :disabled="!familyName || isLoading" class="w-full bg-primary text-white py-4 rounded-xl font-label uppercase tracking-widest text-sm font-bold shadow-lg hover:shadow-primary/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+<span x-show="!isLoading">Generar Link</span>
+<span x-show="isLoading">Generando...</span>
+</button>
+</div>
+
+<!-- Success View -->
+<div x-show="generatedLink" class="space-y-6">
+<div class="bg-primary-fixed/20 border border-primary-fixed/50 rounded-lg p-4">
+<p class="font-label text-xs uppercase tracking-widest text-primary mb-2">Link Generado</p>
+<p class="font-body text-sm text-on-surface break-all" x-text="generatedLink"></p>
+</div>
+
+<button @click="copyToClipboard()" class="w-full bg-primary text-white py-3 rounded-lg font-label uppercase tracking-widest text-sm font-bold hover:bg-on-primary-fixed-variant transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm inline mr-2">content_copy</span>
+Copiar Link
+</button>
+
+<button @click="generatedLink = ''; familyName = ''; isModalOpen = false" class="w-full bg-surface-container text-primary py-3 rounded-lg font-label uppercase tracking-widest text-sm font-bold hover:bg-surface-container-high transition-all">
+Crear Otra Invitación
+</button>
+
+<button @click="isModalOpen = false" class="w-full bg-surface-container text-on-surface py-3 rounded-lg font-label uppercase tracking-widest text-sm font-bold hover:bg-surface-container-high transition-all">
+Cerrar
+</button>
 </div>
 </div>
 </div>
