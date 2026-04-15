@@ -7,9 +7,6 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Alex+Brush&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
 <style>
         @font-face {
             font-family: 'Howell';
@@ -183,37 +180,35 @@
 <h2 class="font-howell text-6xl text-primary leading-none">Confirmar</h2>
 <h3 class="font-serif italic text-4xl text-on-surface tracking-tight -mt-2">Asistencia</h3>
 </div>
-<!-- Family Selection Card -->
-<div class="w-full bg-white/40 backdrop-blur-sm p-10 rounded-3xl shadow-[0_4px_32px_rgba(129,82,83,0.05)] border border-primary/5 space-y-8 scroll-reveal">
-<div class="space-y-1">
-<h3 class="font-serif italic text-2xl text-primary">Tu Familia</h3>
-<p class="text-sm text-on-surface-variant/70">Por favor, selecciona quiénes nos acompañarán.</p>
+<!-- RSVP Form Card -->
+<div class="w-full bg-white/40 backdrop-blur-sm p-8 rounded-3xl shadow-[0_4px_32px_rgba(129,82,83,0.05)] border border-primary/5 space-y-8 scroll-reveal">
+<!-- Contact Name -->
+<div class="space-y-2">
+<label class="block font-serif italic text-lg text-primary" for="contact-name">Nombre del contacto principal</label>
+<input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/20 outline-none transition-all" id="contact-name" name="contact-name" placeholder="Tu nombre completo" type="text"/>
 </div>
-<div class="space-y-6">
-<!-- RSVP Item: Juan Pérez -->
-<div class="flex items-center justify-between group">
-<label class="text-lg font-body text-on-surface cursor-pointer" for="guest-1">Juan Pérez</label>
-<div class="relative inline-flex items-center cursor-pointer">
-<input checked="" class="sr-only peer" id="guest-1" type="checkbox"/>
-<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-</div>
-</div>
-<!-- RSVP Item: María García -->
-<div class="flex items-center justify-between group">
-<label class="text-lg font-body text-on-surface cursor-pointer" for="guest-2">María García</label>
-<div class="relative inline-flex items-center cursor-pointer">
-<input checked="" class="sr-only peer" id="guest-2" type="checkbox"/>
-<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+<!-- Attendance Personal -->
+<div class="space-y-4">
+<p class="font-serif italic text-lg text-primary">¿Asistirás tú personalmente?</p>
+<div class="flex flex-col gap-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 text-primary border-outline-variant focus:ring-primary/20 focus:ring-offset-0 bg-surface-container" name="attending" type="radio" value="yes"/>
+<span class="text-on-surface group-hover:text-primary transition-colors">Sí, allí estaré</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 text-primary border-outline-variant focus:ring-primary/20 focus:ring-offset-0 bg-surface-container" name="attending" type="radio" value="no"/>
+<span class="text-on-surface group-hover:text-primary transition-colors">No podré asistir</span>
+</label>
 </div>
 </div>
-<!-- RSVP Item: Luis Pérez -->
-<div class="flex items-center justify-between group">
-<label class="text-lg font-body text-on-surface cursor-pointer" for="guest-3">Luis Pérez</label>
-<div class="relative inline-flex items-center cursor-pointer">
-<input class="sr-only peer" id="guest-3" type="checkbox"/>
-<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+<!-- Total Guests -->
+<div class="space-y-2">
+<label class="block font-serif italic text-lg text-primary" for="guests-count">Total de acompañantes confirmados</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/20 outline-none transition-all" id="guests-count" min="0" name="guests-count" placeholder="0" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 material-symbols-outlined">group</span>
 </div>
-</div>
+<p class="text-[11px] text-on-surface-variant/60 leading-tight">Incluye a los miembros de tu grupo que asistirán, incluso si tú no puedes ir.</p>
 </div>
 </div>
 <!-- Action Button -->
