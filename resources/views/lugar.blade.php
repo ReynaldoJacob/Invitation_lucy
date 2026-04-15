@@ -157,16 +157,91 @@
             animation: bubble-pop-in 0.6s ease-out forwards;
         }
     </style>
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script>
-    function lugarPage() {
+    window.lugarPage = function() {
         return {
             linkId: new URLSearchParams(window.location.search).get('link_id'),
         }
-    }
+    };
+
+    window.toggleAudio = function() {
+        const audio = document.getElementById('background-music');
+        if (!audio) return;
+
+        if (audio.paused) {
+            audio.muted = false;
+            audio.play().catch(e => {
+                console.log('Play prevented:', e);
+            });
+        } else {
+            audio.pause();
+        }
+    };
+
+    window.addEventListener('load', () => {
+        const audio = document.getElementById('background-music');
+        if (!audio) return;
+
+        // Restaurar estado anterior
+        const savedTime = sessionStorage.getItem('musicTime');
+        const wasPaused = sessionStorage.getItem('musicPaused') === 'true';
+
+        console.log('Restoring audio:', {savedTime, wasPaused, currentTime: audio.currentTime, paused: audio.paused});
+
+        // Solo restaurar el tiempo, no reproducir de nuevo
+        if (savedTime) {
+            audio.currentTime = parseFloat(savedTime);
+            console.log('Time restored to:', audio.currentTime);
+        }
+
+        // Si estaba pausado, pausar
+        if (wasPaused && !audio.paused) {
+            audio.pause();
+        }
+        // Si estaba reproduciéndose y está pausado, reproducir
+        else if (!wasPaused && audio.paused) {
+            audio.muted = false;
+            audio.play().catch(e => console.log('Auto-play prevented:', e));
+        }
+
+        // Guardar estado periódicamente
+        setInterval(() => {
+            if (audio) {
+                sessionStorage.setItem('musicTime', audio.currentTime);
+                sessionStorage.setItem('musicPaused', audio.paused);
+            }
+        }, 500);
+    });
+
+    document.addEventListener('click', () => {
+        const audio = document.getElementById('background-music');
+        if (audio && audio.paused) {
+            audio.muted = false;
+            audio.play().catch(e => console.log('Play error:', e));
+        }
+    }, { once: true });
+
+    // Guardar estado de audio antes de navegar
+    document.addEventListener('click', (e) => {
+        const audio = document.getElementById('background-music');
+        if (!audio) return;
+
+        // Si el click es en un link interno, guardar el estado
+        const link = e.target.closest('a[href^="/"]');
+        if (link) {
+            sessionStorage.setItem('musicTime', audio.currentTime);
+            sessionStorage.setItem('musicPaused', audio.paused);
+            console.log('Audio state saved:', {time: audio.currentTime, paused: audio.paused});
+        }
+    });
 </script>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-[#FCFAF2] text-on-surface font-body min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed" x-data="lugarPage()">
+<!-- Audio Player Global -->
+<audio id="background-music" loop muted style="display: none;">
+<source src="/hasta-mi-final.mp4" type="audio/mp4">
+</audio>
 <div class="relative min-h-screen flex flex-col max-w-lg mx-auto overflow-hidden bg-[#FCFAF2]">
 <!-- Floral Header -->
 <div class="floral-header"></div>

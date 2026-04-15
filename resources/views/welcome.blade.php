@@ -189,16 +189,133 @@ body {
     animation: bubble-pop-in 0.6s ease-out forwards;
 }
 </style>
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script>
-    function welcomePage() {
+    // Definir funciones globalmente
+    window.welcomePage = function() {
         return {
             linkId: new URLSearchParams(window.location.search).get('link_id'),
         }
+    };
+
+    // Sistema de audio global que persiste entre páginas
+    window.initGlobalAudio = function() {
+        const audio = document.getElementById('background-music');
+        if (!audio) return;
+
+        // Restaurar estado anterior
+        const savedTime = sessionStorage.getItem('musicTime');
+        const wasPaused = sessionStorage.getItem('musicPaused') === 'true';
+
+        console.log('Restoring audio:', {savedTime, wasPaused, currentTime: audio.currentTime, paused: audio.paused});
+
+        // Solo restaurar el tiempo, no reproducir de nuevo
+        if (savedTime) {
+            audio.currentTime = parseFloat(savedTime);
+            console.log('Time restored to:', audio.currentTime);
+        }
+
+        // Si estaba pausado, pausar
+        if (wasPaused && !audio.paused) {
+            audio.pause();
+        }
+        // Si estaba reproduciéndose y está pausado, reproducir
+        else if (!wasPaused && audio.paused) {
+            audio.muted = false;
+            audio.play().catch(e => console.log('Auto-play prevented:', e));
+        }
+
+        // Guardar estado periódicamente
+        setInterval(() => {
+            if (audio) {
+                sessionStorage.setItem('musicTime', audio.currentTime);
+                sessionStorage.setItem('musicPaused', audio.paused);
+            }
+        }, 500);
+
+        // Guardar antes de salir
+        window.addEventListener('beforeunload', () => {
+            if (audio) {
+                sessionStorage.setItem('musicTime', audio.currentTime);
+                sessionStorage.setItem('musicPaused', audio.paused);
+            }
+        });
     }
+
+    window.addEventListener('load', window.initGlobalAudio);
+
+    window.toggleAudio = function() {
+        const audio = document.getElementById('background-music');
+        const btn = document.getElementById('audio-state');
+
+        if (audio.paused) {
+            audio.muted = false;
+            audio.play().catch(e => {
+                console.log('Play prevented:', e);
+            });
+            btn.textContent = '⏸ Pausar';
+        } else {
+            audio.pause();
+            btn.textContent = '▶ Reproducir';
+        }
+    };
+
+    // Permitir autoplay después de interacción
+    document.addEventListener('click', () => {
+        const audio = document.getElementById('background-music');
+        if (audio && audio.paused) {
+            audio.muted = false;
+            audio.play().catch(e => console.log('Play error:', e));
+        }
+    }, { once: true });
+
+    // Guardar estado de audio antes de navegar
+    document.addEventListener('click', (e) => {
+        const audio = document.getElementById('background-music');
+        if (!audio) return;
+
+        // Si el click es en un link interno, guardar el estado
+        const link = e.target.closest('a[href^="/"]');
+        if (link) {
+            sessionStorage.setItem('musicTime', audio.currentTime);
+            sessionStorage.setItem('musicPaused', audio.paused);
+            console.log('Audio state saved:', {time: audio.currentTime, paused: audio.paused});
+        }
+    });
+
+    // Intentar reproducir inmediatamente
+    setTimeout(() => {
+        const audio = document.getElementById('background-music');
+
+        // Restaurar estado anterior
+        const savedTime = sessionStorage.getItem('musicTime');
+        const wasPaused = sessionStorage.getItem('musicPaused') === 'true';
+
+        if (savedTime) {
+            audio.currentTime = parseFloat(savedTime);
+        }
+
+        // Intentar reproducir
+        if (!wasPaused) {
+            audio.play().catch(error => {
+                console.log('Autoplay bloqueado:', error);
+            });
+        }
+
+        // Guardar estado periódicamente
+        setInterval(() => {
+            sessionStorage.setItem('musicTime', audio.currentTime);
+            sessionStorage.setItem('musicPaused', audio.paused);
+        }, 1000);
+    }, 500);
 </script>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="text-on-surface selection:bg-primary-container selection:text-on-primary-container" x-data="welcomePage()">
+<!-- Audio Player Global -->
+<audio id="background-music" loop muted style="display: none;">
+<source src="/hasta-mi-final.mp4" type="audio/mp4">
+</audio>
+
 <div class="relative min-h-screen flex flex-col max-w-lg mx-auto overflow-hidden bg-[#FCFAF2]">
 <!-- Floral Header Decorative Element -->
 <div class="floral-header"></div>
@@ -229,7 +346,8 @@ body {
 </div>
 <div class="h-10 w-[0.5px] bg-primary/20"></div>
 <div class="flex flex-col items-start">
-<span class="serif-text text-lg md:text-xl font-medium text-primary/70 tracking-tight">1:00pm</span>
+<span class="serif-text text-lg md:text-xl font-medium text-primary/70 tracking-tight">1:00 pm <br>-<br> 7:00 pm
+</span>
 </div>
 </div>
 </div>
@@ -272,6 +390,17 @@ body {
 </div>
 </div>
 </section>
+<!-- Audio Player Controls Section -->
+<section class="mb-12 relative scroll-reveal">
+<div class="bg-white/40 backdrop-blur-sm rounded-3xl p-4 border border-primary/5 overflow-hidden flex items-center justify-center gap-3">
+<span class="material-symbols-outlined text-primary/60 text-xl">music_note</span>
+<button onclick="toggleAudio()" class="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-label text-xs uppercase tracking-wider rounded-lg transition-colors">
+<span id="audio-state">▶ Reproducir</span>
+</button>
+<span id="audio-status" class="text-[10px] text-on-surface-variant/60 italic">Il Divo - Hasta mi final</span>
+</div>
+</section>
+
 <!-- Actions Section -->
 <section class="grid grid-cols-1 gap-6 mb-20 relative shadow-sm">
 <!-- Lugar Button -->

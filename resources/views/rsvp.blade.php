@@ -8,7 +8,6 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Alex+Brush&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <style>
         @font-face {
             font-family: 'Howell';
@@ -164,9 +163,8 @@
         },
       }
     </script>
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script>
-    function rsvpForm() {
+    window.rsvpForm = function() {
         return {
             linkId: new URLSearchParams(window.location.search).get('link_id'),
             contactName: '',
@@ -258,9 +256,85 @@
             }
         }
     }
+
+    window.toggleAudio = function() {
+        const audio = document.getElementById('background-music');
+        if (!audio) return;
+
+        if (audio.paused) {
+            audio.muted = false;
+            audio.play().catch(e => {
+                console.log('Play prevented:', e);
+            });
+        } else {
+            audio.pause();
+        }
+    };
+
+    window.addEventListener('load', () => {
+        const audio = document.getElementById('background-music');
+        if (!audio) return;
+
+        // Restaurar estado anterior
+        const savedTime = sessionStorage.getItem('musicTime');
+        const wasPaused = sessionStorage.getItem('musicPaused') === 'true';
+
+        console.log('Restoring audio:', {savedTime, wasPaused, currentTime: audio.currentTime, paused: audio.paused});
+
+        // Solo restaurar el tiempo, no reproducir de nuevo
+        if (savedTime) {
+            audio.currentTime = parseFloat(savedTime);
+            console.log('Time restored to:', audio.currentTime);
+        }
+
+        // Si estaba pausado, pausar
+        if (wasPaused && !audio.paused) {
+            audio.pause();
+        }
+        // Si estaba reproduciéndose y está pausado, reproducir
+        else if (!wasPaused && audio.paused) {
+            audio.muted = false;
+            audio.play().catch(e => console.log('Auto-play prevented:', e));
+        }
+
+        // Guardar estado periódicamente
+        setInterval(() => {
+            if (audio) {
+                sessionStorage.setItem('musicTime', audio.currentTime);
+                sessionStorage.setItem('musicPaused', audio.paused);
+            }
+        }, 500);
+    });
+
+    document.addEventListener('click', () => {
+        const audio = document.getElementById('background-music');
+        if (audio && audio.paused) {
+            audio.muted = false;
+            audio.play().catch(e => console.log('Play error:', e));
+        }
+    }, { once: true });
+
+    // Guardar estado de audio antes de navegar
+    document.addEventListener('click', (e) => {
+        const audio = document.getElementById('background-music');
+        if (!audio) return;
+
+        // Si el click es en un link interno, guardar el estado
+        const link = e.target.closest('a[href^="/"]');
+        if (link) {
+            sessionStorage.setItem('musicTime', audio.currentTime);
+            sessionStorage.setItem('musicPaused', audio.paused);
+            console.log('Audio state saved:', {time: audio.currentTime, paused: audio.paused});
+        }
+    });
 </script>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-[#FCFAF2] text-on-surface min-h-screen flex flex-col items-center selection:bg-primary-fixed-dim selection:text-on-primary-fixed overflow-x-hidden" x-data="rsvpForm()" x-init="init()">
+<!-- Audio Player Global -->
+<audio id="background-music" loop muted style="display: none;">
+<source src="/hasta-mi-final.mp4" type="audio/mp4">
+</audio>
 <div class="relative min-h-screen w-full max-w-lg mx-auto flex flex-col overflow-hidden bg-[#FCFAF2]">
 <!-- Floral Header -->
 <div class="floral-header"></div>
