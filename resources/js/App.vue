@@ -125,8 +125,8 @@ const countdown = ref({
 let countdownInterval;
 
 const calculateCountdown = () => {
-  // Fecha objetivo: 28 de Septiembre de 2026 a las 4:00 PM
-  const targetDate = new Date(2026, 8, 28, 16, 0, 0).getTime();
+  // Fecha objetivo: 9 de Mayo de 2026 a las 1:00 PM
+  const targetDate = new Date(2026, 4, 9, 13, 0, 0).getTime();
   const now = new Date().getTime();
   const difference = targetDate - now;
 
