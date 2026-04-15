@@ -24,3 +24,7 @@ Route::get('/lugar', function () {
 Route::get('/rsvp', function () {
     return view('rsvp');
 });
+
+Route::get('/admin', function () {
+    return view('admin');
+});
