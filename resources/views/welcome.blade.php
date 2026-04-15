@@ -10,7 +10,7 @@
         @endphp
         @foreach($manifest as $file)
             @if(str_ends_with($file['file'], '.css'))
-                <link rel="stylesheet" href="{{ asset('build/' . $file['file']) }}">
+                <link rel="stylesheet" href="/build/{{ $file['file'] }}">
             @endif
         @endforeach
     @else
@@ -25,7 +25,7 @@
         @endphp
         @foreach($manifest as $file)
             @if(str_ends_with($file['file'], '.js'))
-                <script src="{{ asset('build/' . $file['file']) }}" type="module"></script>
+                <script src="/build/{{ $file['file'] }}" type="module"></script>
             @endif
         @endforeach
     @endif
