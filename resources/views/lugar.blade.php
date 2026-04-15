@@ -109,27 +109,27 @@
                 max-width: 800px;
             }
         }
-        .floral-footer {
-            position: relative;
-            width: min(100%, 500px);
-            max-width: 600px;
-            height: 180px;
-            margin-left: auto;
-            margin-right: auto;
-            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAFwoqNm0aDz0YqD-LjAD6WPDkFAE10NXiS4WTvXcCiZ9e5zXB4s0MX_wwsyLEO4VBap8TZqY5ERibW82g5Ao-DTAeiCz-jMrruvXGhT4l5FMp9J7K827JjnCrdC8t0H2fuzphftXnxRS_XxCbyA6UxsTADqakXF-nBRl8gUcDNA8XzVPG3EffYXfcKTWB0qAfAQIussejCMT5NlEvJgK6n1XBqY_eUvsNp0m353fEuXCxB811uMUxMZoY-JitLGZ_2qOOrzlmAheE);
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: bottom center;
-            opacity: 0.85;
-            z-index: 0;
-            margin-top: 20px;
-            pointer-events: none;
-            -webkit-mask-image: linear-gradient(to top, black 40%, transparent 100%);
-            mask-image: linear-gradient(to top, black 40%, transparent 100%);
+       .floral-footer {
+        position: relative;
+        width: min(100%, 500px);
+        max-width: 600px;
+        height: 250px;
+        margin-left: auto;
+        margin-right: auto;
+        background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAFwoqNm0aDz0YqD-LjAD6WPDkFAE10NXiS4WTvXcCiZ9e5zXB4s0MX_wwsyLEO4VBap8TZqY5ERibW82g5Ao-DTAeiCz-jMrruvXGhT4l5FMp9J7K827JjnCrdC8t0H2fuzphftXnxRS_XxCbyA6UxsTADqakXF-nBRl8gUcDNA8XzVPG3EffYXfcKTWB0qAfAQIussejCMT5NlEvJgK6n1XBqY_eUvsNp0m353fEuXCxB811uMUxMZoY-JitLGZ_2qOOrzlmAheE);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        opacity: 0.85;
+        z-index: 0;
+        margin-top: 20px;
+        pointer-events: none;
+        -webkit-mask-image: linear-gradient(to top, black 20%, transparent 100%);
+        mask-image: linear-gradient(to top, black 20%, transparent 100%)
         }
         @media (min-width: 768px) {
             .floral-footer {
-                height: 280px;
+                height: 350px;
                 width: 90%;
                 max-width: 800px;
                 margin-top: 40px;
@@ -159,17 +159,17 @@
     </style>
 </head>
 <body class="bg-[#FCFAF2] text-on-surface font-body min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed">
-<!-- Main Content Canvas -->
-<main class="relative pt-36 pb-32 overflow-hidden flex flex-col items-center">
+<div class="relative min-h-screen flex flex-col max-w-lg mx-auto overflow-hidden bg-[#FCFAF2]">
 <!-- Floral Header -->
 <div class="floral-header"></div>
+<!-- Main Content Canvas -->
+<main class="relative w-full flex-1 flex flex-col items-center pt-36 pb-32 overflow-hidden px-6">
 <!-- Hero Title Section -->
-<section class="relative flex flex-col items-center justify-center text-center px-6 mb-12 z-10 scroll-reveal">
+<section class="relative flex flex-col items-center justify-center text-center mb-12 z-10 scroll-reveal">
 <div class="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none">
 <span class="text-[12rem] font-headline font-bold select-none" style="color: rgba(244, 183, 184, 0.4);">65</span>
 </div>
 <div class="mt-8">
-<p class="font-label text-[10px] tracking-[0.4em] text-on-surface-variant/80 uppercase mb-2">LUCY'S BIRTHDAY</p>
 <h2 class="text-6xl font-howell text-primary leading-none">
                 Lucy
             </h2>
@@ -179,7 +179,7 @@
 </div>
 </section>
 <!-- Venue Details Card -->
-<section class="w-full max-w-md px-6 space-y-6 z-10">
+<section class="w-full space-y-6 z-10">
 <div class="bg-white/40 backdrop-blur-sm p-10 rounded-3xl shadow-[0_4px_32px_rgba(129,82,83,0.05)] text-center border border-primary/5 scroll-reveal">
 <div class="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mx-auto mb-4">
 <span class="material-symbols-outlined text-3xl">location_on</span>
@@ -216,17 +216,10 @@
 </div>
 </div>
 </section>
+</main>
 <!-- Floral Footer -->
 <div class="floral-footer"></div>
-<!-- Info Footer -->
-<!-- <footer class="w-full py-12 flex flex-col items-center gap-4 bg-transparent z-10 scroll-reveal">
-<p class="font-headline italic text-lg text-primary">Lucy's 65th Birthday • 2026</p>
-<div class="flex gap-8">
-<a class="font-body text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Contact</a>
-<a class="font-body text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Gift Registry</a>
 </div>
-</footer> -->
-</main>
 <!-- Bottom Navigation Bar -->
 <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-50 bg-[#FCFAF2]/90 backdrop-blur-xl border-t border-primary/5 flex justify-around items-center h-20 pb-safe px-8 shadow-[0_-10px_40px_rgba(129,82,83,0.05)]">
 <a href="/" class="flex flex-col items-center justify-center text-on-surface-variant/40 hover:text-primary transition-all">
