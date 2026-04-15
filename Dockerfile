@@ -38,7 +38,7 @@ COPY . .
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
 # Instalar dependencias PHP
-RUN composer install --no-interaction --no-dev --optimize-autoloader --no-audit
+RUN composer install --no-interaction --no-dev --optimize-autoloader
 
 # Instalar dependencias Node.js
 RUN npm ci --only=production || npm install
