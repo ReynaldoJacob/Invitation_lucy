@@ -1,5 +1,9 @@
 FROM php:8.3-apache
 
+# Deshabilitar MPMs conflictivos y dejar solo prefork
+RUN a2dismod mpm_event mpm_worker 2>/dev/null; \
+    a2enmod mpm_prefork rewrite
+
 # Instalar extensiones de PHP necesarias
 RUN apt-get update && apt-get install -y \
     curl \
@@ -11,7 +15,6 @@ RUN apt-get update && apt-get install -y \
     pdo \
     pdo_mysql \
     zip \
-    && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
 # Instalar Composer
