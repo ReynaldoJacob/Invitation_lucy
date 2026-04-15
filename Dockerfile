@@ -10,11 +10,14 @@ RUN apt-get update && apt-get install -y \
     php8.3-zip \
     php8.3-xml \
     php8.3-mbstring \
+    php8.3-cli \
     curl \
     git \
     unzip \
-    composer \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Instalar Composer
+RUN curl -sS https://getcomposer.org/installer | php8.3 -- --install-dir=/usr/local/bin --filename=composer
 
 # Habilitar módulos de Apache necesarios
 RUN a2enmod rewrite && \
