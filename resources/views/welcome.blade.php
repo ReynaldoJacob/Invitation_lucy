@@ -363,7 +363,6 @@ body {
         }, { once: true });
     }
 
-    window.addEventListener('DOMContentLoaded', initEnvelopeModal);
     document.addEventListener('turbo:load', initEnvelopeModal);
 
     window.toggleAudio = function() {
@@ -611,7 +610,6 @@ function initWelcomePage() {
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
 }
 
-document.addEventListener('DOMContentLoaded', initWelcomePage);
 document.addEventListener('turbo:load', initWelcomePage);
 </script>
 </body></html>
