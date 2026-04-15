@@ -1,4 +1,4 @@
-FROM php:8.1-apache
+FROM php:8.2-apache
 
 # Instalar extensiones de PHP necesarias
 RUN apt-get update && apt-get install -y \
@@ -37,9 +37,8 @@ COPY . .
 # Configurar Apache
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
-# Instalar dependencias PHP (actualizar composer lock si es necesario)
-RUN composer install --no-interaction --no-dev --optimize-autoloader 2>&1 || \
-    (rm -f composer.lock && composer install --no-interaction --no-dev --optimize-autoloader)
+# Instalar dependencias PHP
+RUN composer install --no-interaction --no-dev --optimize-autoloader --no-audit
 
 # Instalar dependencias Node.js
 RUN npm ci --only=production || npm install
