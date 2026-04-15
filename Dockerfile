@@ -1,35 +1,35 @@
-FROM php:8.3-apache
+FROM debian:bookworm-slim
 
-# Deshabilitar MPMs conflictivos y dejar solo prefork
-RUN a2dismod mpm_event mpm_worker 2>/dev/null; \
-    a2enmod mpm_prefork rewrite
-
-# Instalar extensiones de PHP necesarias
+# Instalar PHP y Apache desde cero
 RUN apt-get update && apt-get install -y \
+    apache2 \
+    libapache2-mod-php8.3 \
+    php8.3 \
+    php8.3-pdo \
+    php8.3-mysql \
+    php8.3-zip \
+    php8.3-xml \
+    php8.3-mbstring \
     curl \
     git \
     unzip \
-    libzip-dev \
-    libpq-dev \
-    && docker-php-ext-install \
-    pdo \
-    pdo_mysql \
-    zip \
-    && rm -rf /var/lib/apt/lists/*
+    composer \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Instalar Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Habilitar módulos de Apache necesarios
+RUN a2enmod rewrite && \
+    a2enmod php8.3
 
 # Establecer directorio de trabajo
 WORKDIR /var/www/html
 
-# Copiar archivos del proyecto (assets ya compilados localmente)
+# Copiar archivos del proyecto
 COPY . .
 
 # Configurar Apache
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
-# Instalar dependencias PHP (sin desarrollo)
+# Instalar dependencias PHP
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --no-interaction --no-dev --optimize-autoloader --prefer-dist --no-progress 2>&1 || true
 
@@ -43,4 +43,4 @@ RUN chown -R www-data:www-data /var/www/html && \
 
 EXPOSE 80
 
-CMD ["apache2-foreground"]
+CMD ["apache2ctl", "-D", "FOREGROUND"]
