@@ -1,0 +1,72 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./resources/**/*.{js,jsx,ts,tsx,vue}",
+  ],
+  theme: {
+    extend: {
+      "colors": {
+        "on-error-container": "#93000a",
+        "inverse-surface": "#30312c",
+        "secondary": "#785655",
+        "secondary-fixed-dim": "#e8bcbb",
+        "surface-dim": "#dcdad2",
+        "on-tertiary-fixed": "#32120e",
+        "outline": "#837373",
+        "primary-container": "#c89091",
+        "on-surface": "#1b1c17",
+        "tertiary-fixed-dim": "#f3b8b0",
+        "secondary-container": "#ffd2d1",
+        "surface-container": "#f0eee6",
+        "on-primary-fixed": "#321113",
+        "primary-fixed-dim": "#f4b7b8",
+        "primary-fixed": "#ffdada",
+        "on-error": "#ffffff",
+        "surface-container-lowest": "#ffffff",
+        "surface-bright": "#fbf9f1",
+        "outline-variant": "#d5c2c2",
+        "on-secondary-container": "#7b5858",
+        "on-tertiary-fixed-variant": "#653c36",
+        "surface-container-high": "#eae8e0",
+        "on-primary-container": "#522a2c",
+        "on-secondary": "#ffffff",
+        "primary": "#815253",
+        "on-surface-variant": "#514444",
+        "inverse-on-surface": "#f3f1e9",
+        "error-container": "#ffdad6",
+        "tertiary-container": "#c8918a",
+        "tertiary": "#80534c",
+        "on-tertiary-container": "#512b26",
+        "on-secondary-fixed-variant": "#5e3f3e",
+        "surface-variant": "#e4e3db",
+        "surface-container-low": "#f6f4ec",
+        "secondary-fixed": "#ffdad9",
+        "background": "#FCFAF2",
+        "inverse-primary": "#f4b7b8",
+        "tertiary-fixed": "#ffdad5",
+        "surface": "#FCFAF2",
+        "on-primary-fixed-variant": "#663b3c",
+        "on-primary": "#ffffff",
+        "error": "#ba1a1a",
+        "on-secondary-fixed": "#2d1415",
+        "surface-container-highest": "#e4e3db",
+        "on-tertiary": "#ffffff",
+        "on-background": "#1b1c17",
+        "surface-tint": "#815253"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.125rem",
+        "lg": "0.25rem",
+        "xl": "0.5rem",
+        "full": "0.75rem"
+      },
+      "fontFamily": {
+        "headline": ["Noto Serif"],
+        "body": ["Plus Jakarta Sans"],
+        "label": ["Plus Jakarta Sans"],
+        "script": ["Pinyon Script"]
+      }
+    },
+  },
+  plugins: [],
+}
