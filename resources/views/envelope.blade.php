@@ -287,7 +287,7 @@ body {
 
 <!-- Instruction -->
 <p class="mt-12 font-label text-[11px] tracking-[0.3em] uppercase text-on-surface-variant/60 animate-pulse text-center">
-  Presiona el sobre para descubrir la invitación
+  Presiona el sobre para descubrir la sorpresa
 </p>
 </main>
 

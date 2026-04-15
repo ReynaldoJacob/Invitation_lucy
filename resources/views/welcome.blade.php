@@ -272,8 +272,26 @@ body {
     transition: opacity 0.3s ease;
 }
 .envelope-wrapper:hover .envelope-flap { transform: rotateX(180deg); z-index: 0; }
-.envelope-wrapper:hover .card-inside   { transform: translate(-50%, -100px); }
+.envelope-wrapper:hover .card-inside   { transform: translate(-50%, -175px); }
 .envelope-wrapper:hover .wax-seal      { opacity: 0; }
+
+/* ── Burbujas flotantes ── */
+@keyframes bubble-float {
+    0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+    10%  { opacity: 0.9; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-105vh) translateX(var(--drift, 0px)) scale(0.4); opacity: 0; }
+}
+.bubble {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: bubble-float linear forwards;
+    background: radial-gradient(circle at 30% 30%, rgba(255,218,218,0.9), rgba(129,82,83,0.25));
+    border: 1px solid rgba(200,144,145,0.4);
+    backdrop-filter: blur(2px);
+    z-index: 110;
+}
 </style>
 <script>
     // Definir funciones globalmente
@@ -283,23 +301,70 @@ body {
         }
     };
 
-    // Inicializar audio: play directo en clic del sobre (gesto real del usuario)
-    window.addEventListener('DOMContentLoaded', () => {
-        const audio  = document.getElementById('background-music');
+    // Lanzar oleada de burbujas desde la base de la pantalla
+    function spawnBubbles(count) {
+        const W = window.innerWidth;
+        const H = window.innerHeight;
+        for (let i = 0; i < count; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+
+            const size     = 20 + Math.random() * 80;
+            const x        = Math.random() * W;
+            const duration = 0.8 + Math.random() * 1.0;
+            const delay    = Math.random() * 0.6;
+            const drift    = (Math.random() - 0.5) * 400;  // -200 a +200px diagonal
+
+            bubble.style.cssText = `
+                width:${size}px; height:${size}px;
+                left:${x}px;
+                top:${H}px;
+                animation-duration:${duration}s;
+                animation-delay:${delay}s;
+                opacity:0;
+            `;
+            bubble.style.setProperty('--drift', `${drift}px`);
+
+            document.body.appendChild(bubble);
+            setTimeout(() => bubble.remove(), (duration + delay + 0.2) * 1000);
+        }
+    }
+
+    // Inicializar sobre: compatible con carga inicial y navegaciones Turbo
+    function initEnvelopeModal() {
         const modal  = document.getElementById('envelope-modal');
         const target = document.getElementById('envelope-click-target');
-        if (!audio || !modal || !target) return;
+        if (!modal || !target) return;          // página sin sobre, saltar
+        if (modal.dataset.initialized) return;  // ya inicializado
+        modal.dataset.initialized = '1';
+
+        const audio = document.getElementById('background-music');
+
+        // Si ya vio el sobre en esta sesión, quitarlo de inmediato
+        if (sessionStorage.getItem('envelopeOpened')) {
+            modal.remove();
+            return;
+        }
 
         target.addEventListener('click', () => {
-            // Gesto directo del usuario → sin restricciones de autoplay
-            audio.play().catch(e => console.log(e));
+            sessionStorage.setItem('envelopeOpened', '1');
+            if (audio) audio.play().catch(err => console.log(err));
 
-            // Cerrar modal con fade
+            // 1. Cerrar modal con fade
+            modal.style.transition = 'opacity 0.7s ease';
             modal.style.opacity = '0';
             modal.style.pointerEvents = 'none';
-            setTimeout(() => modal.remove(), 800);
-        });
-    });
+
+            setTimeout(() => {
+                modal.remove();
+                // 2. Después del cierre: lluvia masiva de burbujas
+                spawnBubbles(160);
+            }, 700);
+        }, { once: true });
+    }
+
+    window.addEventListener('DOMContentLoaded', initEnvelopeModal);
+    document.addEventListener('turbo:load', initEnvelopeModal);
 
     window.toggleAudio = function() {
         const audio = document.getElementById('background-music');
@@ -316,6 +381,7 @@ body {
     };
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.12/dist/turbo.es2017-umd.js"></script>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="text-on-surface selection:bg-primary-container selection:text-on-primary-container" x-data="welcomePage()">
@@ -344,7 +410,7 @@ body {
           <div class="text-center">
             <span class="font-headline text-4xl text-primary-container opacity-60 block mb-1">65</span>
             <h1 class="font-headline text-2xl text-primary mb-3">Lucy</h1>
-            <p class="font-label uppercase tracking-[0.2em] text-[9px] text-on-surface-variant">A Heritage Celebration</p>
+            <p class="font-label uppercase tracking-[0.2em] text-[9px] text-on-surface-variant">Celebración sopresa</p>
           </div>
         </div>
         <div class="envelope-body"></div>
@@ -353,7 +419,7 @@ body {
   </div>
 
   <p class="mt-12 font-label text-[11px] tracking-[0.3em] uppercase text-on-surface-variant/60 animate-pulse text-center relative z-10">
-    Presiona el sobre para descubrir la invitación
+    Presiona el sobre para descubrir la sorpresa.
   </p>
 
   <!-- Floral footer dentro del modal -->
@@ -361,7 +427,7 @@ body {
 </div>
 
 <!-- Audio Player Global -->
-<audio id="background-music" loop style="display: none;">
+<audio id="background-music" loop style="display: none;" data-turbo-permanent>
 <source src="/hasta-mi-final.mp4" type="audio/mp4">
 </audio>
 
@@ -397,7 +463,7 @@ body {
 </div>
 <div class="h-10 w-[0.5px] bg-primary/20"></div>
 <div class="flex flex-col items-start">
-<span class="serif-text text-lg md:text-xl font-medium text-primary/70 tracking-tight">1:00 pm <br>-<br> 7:00 pm
+<span class="serif-text text-lg md:text-xl font-medium text-primary/70 tracking-tight">1:00 pm <br>a<br> 7:00 pm
 </span>
 </div>
 </div>
@@ -442,7 +508,7 @@ body {
 </div>
 </section>
 <!-- Audio Player Controls Section -->
-<section class="mb-12 relative scroll-reveal">
+<!-- <section class="mb-12 relative scroll-reveal">
 <div class="bg-white/40 backdrop-blur-sm rounded-3xl p-4 border border-primary/5 overflow-hidden flex items-center justify-center gap-3">
 <span class="material-symbols-outlined text-primary/60 text-xl">music_note</span>
 <button onclick="toggleAudio()" class="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-label text-xs uppercase tracking-wider rounded-lg transition-colors">
@@ -450,7 +516,7 @@ body {
 </button>
 <span id="audio-status" class="text-[10px] text-on-surface-variant/60 italic">Il Divo - Hasta mi final</span>
 </div>
-</section>
+</section> -->
 
 <!-- Actions Section -->
 <section class="grid grid-cols-1 gap-6 mb-20 relative shadow-sm">
@@ -509,49 +575,43 @@ function updateCountdown() {
     }
 }
 
-// Ripple effect for buttons
-document.querySelectorAll('.ripple-button').forEach(button => {
-    button.addEventListener('click', function(e) {
-        const ripple = document.createElement('span');
-        ripple.className = 'ripple';
+function initWelcomePage() {
+    // Limpiar interval anterior si existe
+    clearInterval(window._countdownInterval);
+    window._countdownInterval = setInterval(updateCountdown, 1000);
+    updateCountdown();
 
-        const rect = this.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = x + 'px';
-        ripple.style.top = y + 'px';
-
-        this.appendChild(ripple);
-
-        setTimeout(() => ripple.remove(), 600);
+    // Ripple effect for buttons
+    document.querySelectorAll('.ripple-button').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
     });
-});
 
-// Update countdown every second
-setInterval(updateCountdown, 1000);
-updateCountdown();
-
-// Scroll reveal animation with Intersection Observer
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
             observer.unobserve(entry.target);
         }
     });
-}, observerOptions);
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-// Observe all scroll-reveal elements
-document.querySelectorAll('.scroll-reveal').forEach(el => {
-    observer.observe(el);
-});
+    document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+}
+
+document.addEventListener('DOMContentLoaded', initWelcomePage);
+document.addEventListener('turbo:load', initWelcomePage);
 </script>
 </body></html>
