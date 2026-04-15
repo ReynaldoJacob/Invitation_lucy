@@ -108,23 +108,55 @@ php artisan serve
 - Diseño responsivo
 - Tema de color personalizado para la celebración
 
+## Despliegue en Railway
+
+### Pasos para desplegar:
+
+1. **Conectar repositorio GitHub**
+   - Ve a [Railway.app](https://railway.app)
+   - Inicia sesión con tu cuenta de GitHub
+   - Crea un nuevo proyecto
+   - Selecciona "Deploy from GitHub repo"
+   - Conecta el repositorio `Invitation_lucy`
+
+2. **Configurar variables de entorno**
+   - En el dashboard de Railway, ve a "Variables"
+   - Copia las variables del archivo `.env.example`
+   - Asegúrate de que `APP_ENV=production` y `APP_DEBUG=false`
+
+3. **Variables necesarias en Railway:**
+   ```
+   APP_NAME=Lucy's Celebration
+   APP_ENV=production
+   APP_DEBUG=false
+   APP_KEY=base64:... (Railway lo genera automáticamente)
+   APP_URL=tu-dominio.railway.app
+   ```
+
+4. **Railway detectará automáticamente:**
+   - El Dockerfile
+   - Las dependencias de PHP (composer.json)
+   - Las dependencias de Node (package.json)
+
+5. **El despliegue incluye:**
+   - ✓ Instalación de dependencias PHP
+   - ✓ Instalación de dependencias Node
+   - ✓ Compilación de assets (Vue + Tailwind)
+   - ✓ Generación de clave APP_KEY
+   - **No ejecuta migraciones** (solo muestra la página)
+
+6. **Esperar a que se compile y despliegue**
+   - Railway ejecutará el Dockerfile
+   - Compilará los assets
+   - Tu sitio estará disponible en el URL de Railway
+
+### Troubleshooting:
+
+- **Error de permisos:** Railway maneja los permisos automáticamente
+- **Assets no se cargan:** Asegúrate de que `npm run build` se ejecutó (verificar en los logs)
+- **Página en blanco:** Revisar los logs de Railway para ver errores
+
 ## Licencia
 
 Este proyecto es de código abierto bajo la licencia MIT.
 
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
