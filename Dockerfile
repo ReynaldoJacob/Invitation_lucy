@@ -7,57 +7,28 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libzip-dev \
     libpq-dev \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libpng-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
     pdo \
     pdo_mysql \
     zip \
-    gd \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
 # Instalar Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Instalar Node.js 18 con mejor validación
-RUN apt-get update && \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs && \
-    which node && node --version && \
-    which npm && npm --version && \
-    rm -rf /var/lib/apt/lists/*
-
 # Establecer directorio de trabajo
 WORKDIR /var/www/html
 
-# Copiar archivos del proyecto
+# Copiar archivos del proyecto (assets ya compilados localmente)
 COPY . .
 
 # Configurar Apache
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
-# Instalar dependencias PHP con configuración relajada
+# Instalar dependencias PHP (sin desarrollo)
 ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV COMPOSER_NO_INTERACTION=1
-RUN composer config --global --auth http-basic.repo.packagist.com token token 2>/dev/null || true && \
-    composer install --prefer-dist --no-progress --no-dev 2>&1 || \
-    composer install --prefer-dist --no-progress --no-dev --no-audit 2>&1 || \
-    composer update --prefer-dist --no-progress --no-dev 2>&1 || true
-
-# Instalar dependencias Node.js
-RUN echo "Installing npm dependencies..." && \
-    which npm && npm --version && \
-    (npm ci --only=production 2>&1 || npm install --omit=dev 2>&1 || npm install 2>&1) && \
-    echo "npm dependencies installed successfully"
-
-# Compilar assets
-RUN echo "Building assets..." && \
-    which npm && \
-    (npm run build 2>&1 || echo "npm build failed, continuing anyway") && \
-    echo "Assets build completed"
+RUN composer install --no-interaction --no-dev --optimize-autoloader --prefer-dist --no-progress 2>&1 || true
 
 # Generar clave de aplicación
 RUN php artisan key:generate --force 2>&1 || true
