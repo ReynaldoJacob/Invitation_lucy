@@ -29,6 +29,7 @@ COPY . .
 RUN npm run build 2>&1 || true \
     && chmod -R 775 storage bootstrap/cache 2>&1 || true
 
-EXPOSE 8000
+# Railway asigna un puerto dinámico, mantener flexible
+EXPOSE 80
 
 CMD ["bash", "start.sh"]
