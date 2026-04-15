@@ -184,10 +184,10 @@
 <div class="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mx-auto mb-4">
 <span class="material-symbols-outlined text-3xl">location_on</span>
 </div>
-<h3 class="text-2xl font-headline text-on-surface mb-2">Salón Las Rosas</h3>
+<h3 class="text-2xl font-headline text-on-surface mb-2">Terraza Puerta de Hierro</h3>
 <p class="text-on-surface-variant font-light leading-relaxed">
-                Av. de la Reforma 450, <br/>
-                Lomas de Chapultepec, CDMX
+                Francisco Zarco 1686, Girasoles, 28017  <br/>
+                  Colima, Col.
             </p>
 </div>
 <!-- Stylized Map Component -->
@@ -196,7 +196,7 @@
 <img class="w-full h-full object-cover grayscale brightness-110 contrast-75" data-alt="Minimalist abstract map view of an upscale city neighborhood" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC99LfafRoZxtmA8biqRj85B1pxzDz-zWxdF6AaO6iNo648N4_e_g27DDNuDFJvgmk4JjSkNZ7VC_wuh6MyAkfHNmM2j10kenPJ7-fcgVk8_TcCPiAbsBf6eY1zpx68B0lD7QKXGqeiROgtdRsXkLmPeOce8tGmpNaexfVWcf1zDxlKPv8Xmrhva8W9SvtroJ2kTPKYmK7h8YnBomit9Rx_0edYX5rjzncD04vFK5yT53O4OJILsbkLVOgO4qtWZ9_Cx2FOMj5Rgd8"/>
 </div>
 <div class="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-black/0 transition-colors">
-<a href="https://maps.google.com/?q=Av.+de+la+Reforma+450,+Lomas+de+Chapultepec,+CDMX" target="_blank" class="bg-primary text-on-primary px-8 py-4 rounded-full font-label text-xs uppercase tracking-[0.2em] shadow-xl flex items-center gap-3 hover:shadow-primary/20 transition-all duration-300 transform group-hover:scale-105">
+<a href="https://www.google.com/maps?q=terraza+puerta+de+hierro,+Francisco+Zarco+1686,+Girasoles,+28017+Colima,+Col.&ftid=0x84255b00053567a7:0x7b739d236dbcabc2&entry=gps&shh=CAE&lucs=,94297699,94231188,94280568,47071704,94218641,94282134,94286869&g_ep=CAISEjI2LjE0LjAuODkxOTAzMTgwMBgAIIgnKj8sOTQyOTc2OTksOTQyMzExODgsOTQyODA1NjgsNDcwNzE3MDQsOTQyMTg2NDEsOTQyODIxMzQsOTQyODY4NjlCAk1Y&skid=9b4737a4-4812-4c4a-a342-b3a8b5eea61d&g_st=iw" target="_blank" class="bg-primary text-on-primary px-8 py-4 rounded-full font-label text-xs uppercase tracking-[0.2em] shadow-xl flex items-center gap-3 hover:shadow-primary/20 transition-all duration-300 transform group-hover:scale-105">
 <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">directions</span>
                     Ver en Google Maps
                 </a>
