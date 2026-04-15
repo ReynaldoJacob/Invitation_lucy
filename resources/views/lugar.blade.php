@@ -237,10 +237,10 @@
 <span class="material-symbols-outlined text-2xl" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
 <span class="font-label uppercase tracking-[0.15em] text-[9px] font-bold mt-1">Lugar</span>
 </button>
-<button class="flex flex-col items-center justify-center text-on-surface-variant/40 hover:text-primary transition-all">
+<a href="/rsvp" class="flex flex-col items-center justify-center text-on-surface-variant/40 hover:text-primary transition-all">
 <span class="material-symbols-outlined text-2xl" data-icon="mail">mail</span>
 <span class="font-label uppercase tracking-[0.15em] text-[9px] mt-1">RSVP</span>
-</button>
+</a>
 </nav>
 
 <script>

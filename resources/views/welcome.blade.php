@@ -273,13 +273,13 @@ body {
 <span class="text-[9px] text-on-surface-variant mt-1 italic">Ver mapa y dirección</span>
 </a>
 <!-- RSVP Button -->
-<button class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
+<a href="/rsvp" class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
 <div class="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-2xl" data-icon="mail">mail</span>
 </div>
 <span class="font-label uppercase tracking-[0.2em] text-[11px] font-semibold relative z-10">Confirmar Asistencia</span>
 <span class="text-[9px] opacity-80 mt-1 italic relative z-10">Tu presencia es el regalo</span>
-</button>
+</a>
 </section>
 </main>
 <!-- Floral Footer Decorative Element -->
