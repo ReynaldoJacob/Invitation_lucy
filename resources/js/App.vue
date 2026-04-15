@@ -5,11 +5,11 @@
     <main class="relative z-10 flex-grow flex flex-col pt-32 px-12">
       <!-- Hero Section -->
       <section class="flex flex-col items-center justify-center text-center w-full mb-12">
-        <div class="mb-4">
+        <div class="mb-4 w-full flex flex-col items-center justify-center">
             <br>
             <br>
-          <h2 class="script-text text-6xl md:text-7xl text-primary leading-tight">Shhh!</h2>
-          <p class="font-label uppercase tracking-[0.4em] text-[10px] text-on-surface-variant/80">Es una sorpresa</p>
+          <h2 class="script-text text-6xl md:text-7xl text-primary leading-tight text-center">Shhh!</h2>
+          <p class="font-label uppercase tracking-[0.4em] text-[10px] text-on-surface-variant/80 text-center">Es una sorpresa</p>
         </div>
         <h1 class="tangerine-bold text-[120px] md:text-[150px] text-primary tracking-tight leading-none mb-6">
           Lucy
@@ -17,15 +17,15 @@
          <!-- <h1 class="script-text text-8xl md:text-6xl font-bold text-primary tracking-tight leading-none mb-6">
           65
         </h1> -->
-        <div class="flex items-center justify-center gap-4 my-12">
-          <span class="serif-text text-xl font-bold text-primary/80 uppercase">Sab</span>
+        <div class="flex items-center justify-center gap-4 my-12 flex-wrap">
+          <span class="serif-text text-base md:text-xl font-bold text-primary/80 uppercase">Sab</span>
           <div class="h-8 w-[1px] bg-outline-variant/40"></div>
           <div class="flex flex-col items-center">
             <span class="serif-text text-3xl font-bold text-primary leading-none">09</span>
-            <span class="serif-text text-[12px] text-primary/80 uppercase tracking-wide">Mayo</span>
+            <span class="serif-text text-xs md:text-[12px] text-primary/80 uppercase tracking-wide">Mayo</span>
           </div>
           <div class="h-8 w-[1px] bg-outline-variant/40"></div>
-          <span class="serif-text text-xl font-bold text-primary/80">1:00 pm</span>
+          <span class="serif-text text-base md:text-xl font-bold text-primary/80">1:00 pm</span>
         </div>
         <div class="mt-8 px-4">
           <div class="mb-6">
