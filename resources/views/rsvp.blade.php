@@ -52,7 +52,7 @@
             position: relative;
             width: min(100%, 500px);
             max-width: 600px;
-            height: 180px;
+            height: 250px;
             margin-left: auto;
             margin-right: auto;
             background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAFwoqNm0aDz0YqD-LjAD6WPDkFAE10NXiS4WTvXcCiZ9e5zXB4s0MX_wwsyLEO4VBap8TZqY5ERibW82g5Ao-DTAeiCz-jMrruvXGhT4l5FMp9J7K827JjnCrdC8t0H2fuzphftXnxRS_XxCbyA6UxsTADqakXF-nBRl8gUcDNA8XzVPG3EffYXfcKTWB0qAfAQIussejCMT5NlEvJgK6n1XBqY_eUvsNp0m353fEuXCxB811uMUxMZoY-JitLGZ_2qOOrzlmAheE);
@@ -63,12 +63,12 @@
             z-index: 0;
             margin-top: 20px;
             pointer-events: none;
-            -webkit-mask-image: linear-gradient(to top, black 40%, transparent 100%);
-            mask-image: linear-gradient(to top, black 40%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, black 20%, transparent 100%);
+            mask-image: linear-gradient(to top, black 20%, transparent 100%);
         }
         @media (min-width: 768px) {
             .floral-footer {
-                height: 280px;
+                height: 350px;
                 width: 90%;
                 max-width: 800px;
                 margin-top: 40px;
@@ -167,9 +167,10 @@
     </script>
 </head>
 <body class="bg-[#FCFAF2] text-on-surface min-h-screen flex flex-col items-center selection:bg-primary-fixed-dim selection:text-on-primary-fixed overflow-x-hidden">
-<main class="relative w-full max-w-lg flex-1 flex flex-col items-center pt-36 pb-32 overflow-hidden">
+<div class="relative min-h-screen w-full max-w-lg mx-auto flex flex-col overflow-hidden bg-[#FCFAF2]">
 <!-- Floral Header -->
 <div class="floral-header"></div>
+<main class="relative flex-1 flex flex-col items-center pt-36 pb-32 overflow-hidden px-6">
 <!-- Large Background '65' -->
 <div class="absolute top-48 left-0 w-full flex items-center justify-center -z-10 pointer-events-none select-none">
 <span class="text-[14rem] font-serif font-bold" style="color: rgba(244, 183, 184, 0.4);">65</span>
@@ -183,7 +184,7 @@
 <h3 class="font-serif italic text-4xl text-on-surface tracking-tight -mt-2">Asistencia</h3>
 </div>
 <!-- Family Selection Card -->
-<div class="mx-6 bg-white/40 backdrop-blur-sm p-10 rounded-3xl shadow-[0_4px_32px_rgba(129,82,83,0.05)] border border-primary/5 space-y-8 scroll-reveal">
+<div class="w-full bg-white/40 backdrop-blur-sm p-10 rounded-3xl shadow-[0_4px_32px_rgba(129,82,83,0.05)] border border-primary/5 space-y-8 scroll-reveal">
 <div class="space-y-1">
 <h3 class="font-serif italic text-2xl text-primary">Tu Familia</h3>
 <p class="text-sm text-on-surface-variant/70">Por favor, selecciona quiénes nos acompañarán.</p>
@@ -216,7 +217,7 @@
 </div>
 </div>
 <!-- Action Button -->
-<div class="flex flex-col items-center gap-8 px-6 scroll-reveal">
+<div class="flex flex-col items-center gap-8 scroll-reveal">
 <button class="w-full max-w-xs py-4 px-8 bg-primary text-on-primary font-label text-xs tracking-[0.2em] uppercase font-bold rounded-xl hover:bg-primary-container transition-all duration-300 shadow-xl active:scale-[0.98]">
                 CONFIRMAR
             </button>
@@ -225,13 +226,10 @@
             </p>
 </div>
 </section>
+</main>
 <!-- Floral Footer -->
 <div class="floral-footer"></div>
-<!-- Info Footer -->
-<!-- <footer class="w-full py-12 flex flex-col items-center gap-4 bg-transparent z-10 scroll-reveal">
-<p class="font-serif italic text-lg text-primary">Lucy's 65th Birthday • 2026</p>
-</footer> -->
-</main>
+</div>
 <!-- Bottom Navigation Bar -->
 <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-50 bg-[#FCFAF2]/90 backdrop-blur-xl border-t border-primary/5 flex justify-around items-center h-20 pb-safe px-8 shadow-[0_-10px_40px_rgba(129,82,83,0.05)]">
 <a href="/" class="flex flex-col items-center justify-center text-on-surface-variant/40 hover:text-primary transition-all">
