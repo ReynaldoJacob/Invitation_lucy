@@ -127,7 +127,7 @@ body {
     background-position: bottom center;
     opacity: 0.9;
     z-index: 0;
-    margin-top: -80px;
+    margin-top: -180px;
     pointer-events: none;
     -webkit-mask-image: linear-gradient(to top, black 50%, transparent 100%);
     mask-image: linear-gradient(to top, black 50%, transparent 100%)
@@ -167,7 +167,7 @@ body {
 .scroll-reveal.visible {
     animation: bubble-pop-in 0.6s ease-out forwards;
 }
-}</style>
+</style>
 </head>
 <body class="text-on-surface selection:bg-primary-container selection:text-on-primary-container">
 <div class="relative min-h-screen flex flex-col max-w-lg mx-auto overflow-hidden bg-[#FCFAF2]">
@@ -180,9 +180,13 @@ body {
 <h2 class="script-text text-6xl md:text-7xl text-primary leading-tight">Shhh!</h2>
 <p class="font-label uppercase tracking-[0.4em] text-[10px] text-on-surface-variant/80">Es una sorpresa</p>
 </div>
-<h1 class="tangerine-bold text-[120px] md:text-[150px] text-primary tracking-wide leading-none mb-6 font-normal">
-                Lucy
-            </h1>
+<br><br>
+<div class="relative flex items-center justify-center mb-6">
+<span class="absolute inset-0 flex items-center justify-center serif-text text-[12rem] md:text-[16rem] font-bold select-none pointer-events-none z-0" style="color: rgba(244, 183, 184, 0.4); font-variation-settings: 'wght' 700;">65</span>
+<h1 class="tangerine-bold text-[120px] md:text-[150px] text-primary tracking-wide leading-none font-normal relative z-10">
+        Lucy
+    </h1>
+</div>
 <div class="flex items-center justify-center w-full my-10">
 <div class="flex items-center gap-6 md:gap-8">
 <div class="flex flex-col items-end">
