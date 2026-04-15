@@ -4,6 +4,9 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Lucy's Celebration - Una Sorpresa Elegante</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
     @if(file_exists(public_path('build/manifest.json')))
         @php
             $manifest = json_decode(file_get_contents(public_path('build/manifest.json')), true);

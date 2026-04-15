@@ -25,6 +25,18 @@ body {
     font-family: "Pinyon Script", cursive;
 }
 
+.tangerine-regular {
+    font-family: "Tangerine", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.tangerine-bold {
+    font-family: "Tangerine", cursive;
+    font-weight: 700;
+    font-style: normal;
+}
+
 .floral-header {
     position: absolute;
     top: 0;
