@@ -243,7 +243,7 @@
                         <p class="font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant/60 mb-1">Cómo llegar</p>
                         <p class="font-headline italic text-on-surface-variant text-sm">Te esperamos aquí</p>
                     </div>
-                    <img src="/croquis.jpeg" alt="Croquis del lugar" class="w-full object-contain" />
+                    <img src="/Croquis.jpeg" alt="Croquis del lugar" class="w-full object-contain" />
                 </div>
                 <!-- Detail Grid -->
                 <div class="grid grid-cols-2 gap-4">
