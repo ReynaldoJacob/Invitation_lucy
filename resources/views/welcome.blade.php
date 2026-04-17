@@ -266,9 +266,12 @@ body {
     transition: opacity 0.3s ease;
     mix-blend-mode: multiply;
 }
-.envelope-wrapper:hover .envelope-flap { transform: rotateX(180deg); z-index: 0; }
-.envelope-wrapper:hover .card-inside   { transform: translate(-50%, -175px); }
-.envelope-wrapper:hover .wax-seal      { opacity: 0; }
+.envelope-wrapper:hover .envelope-flap,
+.envelope-wrapper.opened .envelope-flap { transform: rotateX(180deg); z-index: 0; }
+.envelope-wrapper:hover .card-inside,
+.envelope-wrapper.opened .card-inside   { transform: translate(-50%, -175px); }
+.envelope-wrapper:hover .wax-seal,
+.envelope-wrapper.opened .wax-seal      { opacity: 0; }
 
 /* ── Burbujas flotantes ── */
 @keyframes bubble-float {
@@ -543,13 +546,16 @@ function initEnvelopeModal() {
             sessionStorage.setItem('audioPlaying', '1');
         }
 
-        modal.style.transition = 'opacity 0.7s ease';
-        modal.style.opacity = '0';
+        // Disparar animación de apertura
+        target.classList.add('opened');
         modal.style.pointerEvents = 'none';
 
+        // Esperar a que la animación termine (carta sube en ~1.4s) y luego desvanecer
         setTimeout(() => {
-            modal.remove();
-        }, 700);
+            modal.style.transition = 'opacity 0.8s ease';
+            modal.style.opacity = '0';
+            setTimeout(() => modal.remove(), 800);
+        }, 1400);
     }, { once: true });
 }
 
