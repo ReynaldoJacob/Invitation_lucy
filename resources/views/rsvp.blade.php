@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="csrf-token" content="{{ csrf_token() }}"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Confirmación RSVP - 65 Años de Lucy</title>
+<title>Confirmación - 65 Años de Lucy</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Alex+Brush&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -261,8 +261,10 @@
         if (!audio) return;
         if (audio.paused) {
             audio.play().catch(e => console.log('Play prevented:', e));
+            sessionStorage.setItem('audioPlaying', '1');
         } else {
             audio.pause();
+            sessionStorage.removeItem('audioPlaying');
         }
     };
 
@@ -380,7 +382,7 @@ Tu asistencia ha sido confirmada con éxito.
 
 <!-- Important note in elegant box -->
 <div class="bg-primary-fixed/30 border border-primary/20 rounded-2xl p-6 space-y-3 my-4">
-<p class="font-howell text-2xl text-primary italic">Un pequeño secreto…</p>
+<p class="font-howell text-2xl text-primary italic">Recuerda…</p>
 <div class="space-y-2 text-on-surface text-sm leading-relaxed">
 <p>• Es sorpresa, así que guardalo bien</p>
 <p>• No le cuentes nada a Lucy</p>
@@ -416,16 +418,12 @@ Volver al inicio
 </a>
 <a :href="linkId ? '/rsvp?link_id=' + linkId : '/rsvp'" class="flex flex-col items-center justify-center text-primary transition-all scale-105">
 <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">how_to_reg</span>
-<span class="font-label uppercase tracking-[0.15em] text-[9px] font-bold mt-1">RSVP</span>
+<span class="font-label uppercase tracking-[0.15em] text-[9px] font-bold mt-1">Confirmación</span>
 </a>
 </nav>
 
 <script>
-// Scroll reveal animation with Intersection Observer
-const observerOptions = {
-<script>
 function initRsvpPage() {
-    // Reinicializar Alpine en navegaciones Turbo
     if (window.Alpine) {
         document.querySelectorAll('[x-data]').forEach(el => {
             if (!el._x_dataStack) window.Alpine.initTree(el);
@@ -434,5 +432,10 @@ function initRsvpPage() {
 }
 
 initRsvpPage();
+// Auto-resume audio if was playing before navigation
+if (sessionStorage.getItem('audioPlaying')) {
+    const audio = document.getElementById('background-music');
+    if (audio) audio.play().catch(() => {});
+}
 </script>
 </body></html>

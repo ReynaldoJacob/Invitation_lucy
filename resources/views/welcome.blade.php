@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 
-<html class="light" lang="en"><head>
+<html class="light" lang="es"><head>
 <meta charset="utf-8"/>
 <meta name="csrf-token" content="{{ csrf_token() }}"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Lucy's Celebration - Una Sorpresa Elegante</title>
+<title>Celebración de Lucy - Fiestra Sorpresa</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;family=Pinyon+Script&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -259,17 +259,12 @@ body {
 }
 .wax-seal {
     position: absolute;
-    top: 100px; left: 50%;
+    top: 115px; left: 50%;
     transform: translate(-50%, -50%);
-    width: 44px; height: 44px;
-    background: radial-gradient(circle at 30% 30%, #c89091, #815253);
-    border-radius: 50%;
+    width: 90px; height: 90px;
     z-index: 4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(129, 82, 83, 0.3);
     transition: opacity 0.3s ease;
+    mix-blend-mode: multiply;
 }
 .envelope-wrapper:hover .envelope-flap { transform: rotateX(180deg); z-index: 0; }
 .envelope-wrapper:hover .card-inside   { transform: translate(-50%, -175px); }
@@ -325,9 +320,11 @@ body {
         if (audio.paused) {
             audio.muted = false;
             audio.play().catch(e => console.log('Play prevented:', e));
+            sessionStorage.setItem('audioPlaying', '1');
             if (btn) btn.textContent = '⏸ Pausar';
         } else {
             audio.pause();
+            sessionStorage.removeItem('audioPlaying');
             if (btn) btn.textContent = '▶ Reproducir';
         }
     };
@@ -355,7 +352,7 @@ body {
           <div class="envelope-flap-inner"></div>
         </div>
         <div class="wax-seal">
-          <span class="material-symbols-outlined text-white text-lg" style="font-variation-settings: 'FILL' 1;">favorite</span>
+          <img src="/sello.png" alt="Sello" class="w-full h-full object-contain" style="mix-blend-mode: multiply;" />
         </div>
         <div class="card-inside shadow-sm">
           <div class="text-center">
@@ -392,7 +389,7 @@ body {
 <!-- Hero Section -->
 <section class="flex flex-col items-center justify-center text-center w-full mb-12 scroll-reveal">
 <div class="mb-4">
-<h2 class="script-text text-6xl md:text-7xl text-primary leading-tight">Shhh!</h2>
+<h2 class="script-text text-6xl md:text-7xl text-primary tangerine-bold">Shhh!</h2>
 <p class="font-label uppercase tracking-[0.4em] text-[10px] text-on-surface-variant/80">Es una sorpresa</p>
 </div>
 <br><br>
@@ -486,6 +483,7 @@ body {
 </div>
 <span class="font-label uppercase tracking-[0.2em] text-[11px] font-semibold relative z-10">Confirmar Asistencia</span>
 <span class="text-[9px] opacity-80 mt-1 italic relative z-10">Tu presencia es el regalo</span>
+<span class="text-[9px] opacity-80 mt-1 italic relative z-10 font-semibold">Te agradeceríamos confirmar tu asistencia antes del 30 de Abril</span>
 </a>
 </section>
 </main>
@@ -540,7 +538,10 @@ function initEnvelopeModal() {
 
     target.addEventListener('click', () => {
         sessionStorage.setItem('envelopeOpened', '1');
-        if (audio) audio.play().catch(err => console.log(err));
+        if (audio) {
+            audio.play().catch(err => console.log(err));
+            sessionStorage.setItem('audioPlaying', '1');
+        }
 
         modal.style.transition = 'opacity 0.7s ease';
         modal.style.opacity = '0';
@@ -548,7 +549,6 @@ function initEnvelopeModal() {
 
         setTimeout(() => {
             modal.remove();
-            spawnBubbles(160);
         }, 700);
     }, { once: true });
 }
@@ -589,6 +589,11 @@ function initWelcomePage() {
 document.addEventListener('DOMContentLoaded', function() {
     initEnvelopeModal();
     initWelcomePage();
+    // Auto-resume audio if was playing before navigation
+    if (sessionStorage.getItem('audioPlaying') && sessionStorage.getItem('envelopeOpened')) {
+        const audio = document.getElementById('background-music');
+        if (audio) audio.play().catch(() => {});
+    }
 });
 </script>
 </body></html>

@@ -98,11 +98,13 @@
             familyName: '',
             isLoading: false,
             generatedLink: '',
+            generatedFamilyName: '',
             errorMessage: '',
             families: [],
             totalConfirmed: 0,
             totalGuests: 0,
             isLoadingFamilies: true,
+            copied: false,
 
             async createInvitation() {
                 this.isLoading = true;
@@ -122,6 +124,7 @@
                     const data = await response.json();
                     if (data.success) {
                         this.generatedLink = data.link;
+                        this.generatedFamilyName = this.familyName;
                         this.familyName = '';
                         this.loadFamilies();
                     } else {
@@ -150,7 +153,12 @@
             },
 
             copyToClipboard() {
-                navigator.clipboard.writeText(this.generatedLink);
+                const nombre = this.generatedFamilyName ? `${this.generatedFamilyName}, ` : '';
+                const mensaje = `${nombre}te invitamos a la celebración sorpresa de Lucy 🌸✨\n\nEs un secreto, por favor no lo menciones 🤫\n\nPor favor confirma tu asistencia antes del 30 de abril 🗓️\n\nConfirma tu asistencia aquí:\n${this.generatedLink}`;
+                navigator.clipboard.writeText(mensaje).then(() => {
+                    this.copied = true;
+                    setTimeout(() => { this.copied = false; }, 2500);
+                });
             },
 
             getConfirmationStatus(family) {
@@ -164,10 +172,8 @@
                 if (!family.attending) {
                     return 'No asiste';
                 }
-                if (family.guest_count === 0) {
-                    return 'Solo contacto';
-                }
-                return `Contacto + ${family.guest_count}`;
+                const total = family.guest_count || 0;
+                return `${total} persona${total !== 1 ? 's' : ''}`;
             },
 
             init() {
@@ -312,12 +318,12 @@
 <p class="font-body text-sm text-on-surface break-all" x-text="generatedLink"></p>
 </div>
 
-<button @click="copyToClipboard()" class="w-full bg-primary text-white py-3 rounded-lg font-label uppercase tracking-widest text-sm font-bold hover:bg-on-primary-fixed-variant transition-all active:scale-95">
-<span class="material-symbols-outlined text-sm inline mr-2">content_copy</span>
-Copiar Link
+<button @click="copyToClipboard()" class="w-full py-3 rounded-lg font-label uppercase tracking-widest text-sm font-bold transition-all active:scale-95" :class="copied ? 'bg-green-600 text-white' : 'bg-primary text-white hover:bg-on-primary-fixed-variant'">
+<span class="material-symbols-outlined text-sm inline mr-2" x-text="copied ? 'check_circle' : 'content_copy'"></span>
+<span x-text="copied ? '¡Copiado!' : 'Copiar Mensaje'"></span>
 </button>
 
-<button @click="generatedLink = ''; familyName = ''; isModalOpen = false" class="w-full bg-surface-container text-primary py-3 rounded-lg font-label uppercase tracking-widest text-sm font-bold hover:bg-surface-container-high transition-all">
+<button @click="generatedLink = ''; generatedFamilyName = ''; familyName = ''; copied = false;" class="w-full bg-surface-container text-primary py-3 rounded-lg font-label uppercase tracking-widest text-sm font-bold hover:bg-surface-container-high transition-all">
 Crear Otra Invitación
 </button>
 
