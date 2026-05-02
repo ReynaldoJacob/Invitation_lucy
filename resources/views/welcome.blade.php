@@ -295,6 +295,15 @@ body {
     window.welcomePage = function() {
         return {
             linkId: new URLSearchParams(window.location.search).get('link_id'),
+            attending: null,
+            init() {
+                if (this.linkId) {
+                    fetch('/api/families/' + this.linkId)
+                        .then(r => r.ok ? r.json() : null)
+                        .then(data => { if (data) this.attending = data.attending; })
+                        .catch(() => {});
+                }
+            }
         }
     };
 
@@ -472,7 +481,7 @@ body {
 <!-- Actions Section -->
 <section class="grid grid-cols-1 gap-6 mb-20 relative shadow-sm">
 <!-- Lugar Button -->
-<a :href="linkId ? '/lugar?link_id=' + linkId : '/lugar'" class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
+<a x-show="attending === true" :href="linkId ? '/lugar?link_id=' + linkId : '/lugar'" class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
 <div class="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-2xl" data-icon="location_on">location_on</span>
 </div>
@@ -480,14 +489,17 @@ body {
 <span class="text-[9px] text-on-surface-variant mt-1 italic">Ver mapa y dirección</span>
 </a>
 <!-- RSVP Button -->
-<a :href="linkId ? '/rsvp?link_id=' + linkId : '/rsvp'" class="ripple-button group flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-primary/5 hover:bg-white/70 transition-all duration-500 relative overflow-hidden scroll-reveal">
-<div class="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-2xl" data-icon="mail">mail</span>
+<div class="flex flex-col items-center justify-center p-8 bg-primary text-on-primary rounded-3xl shadow-xl shadow-primary/10 relative overflow-hidden scroll-reveal gap-3">
+  <div class="w-12 h-12 rounded-full bg-on-primary/15 flex items-center justify-center mb-1 relative z-10">
+    <span class="material-symbols-outlined text-2xl" data-icon="mail">mail</span>
+  </div>
+  <span class="font-label uppercase tracking-[0.2em] text-[11px] font-semibold relative z-10">Confirmación Cerrada</span>
+  <div class="w-full border-t border-on-primary/20 mt-1"></div>
+  <p class="text-center text-[11px] opacity-90 italic font-serif leading-relaxed relative z-10">
+    Gracias por tu respuesta.<br/>
+    El tiempo para confirmar ya ha concluido.
+  </p>
 </div>
-<span class="font-label uppercase tracking-[0.2em] text-[11px] font-semibold relative z-10">Confirmar Asistencia</span>
-<span class="text-[9px] opacity-80 mt-1 italic relative z-10">Tu presencia es el regalo</span>
-<span class="text-[9px] opacity-80 mt-1 italic relative z-10 font-semibold">Te agradeceríamos confirmar tu asistencia antes del 30 de Abril</span>
-</a>
 </section>
 </main>
 <!-- Floral Footer Decorative Element -->

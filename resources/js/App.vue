@@ -81,13 +81,17 @@
         </button>
 
         <!-- RSVP Button -->
-        <button class="group flex flex-col items-center justify-center p-8 bg-primary text-on-primary rounded-3xl shadow-xl shadow-primary/10 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 relative overflow-hidden">
-          <div class="w-12 h-12 rounded-full bg-on-primary/15 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-10">
+        <div class="flex flex-col items-center justify-center p-8 bg-primary text-on-primary rounded-3xl shadow-xl shadow-primary/10 relative overflow-hidden gap-3">
+          <div class="w-12 h-12 rounded-full bg-on-primary/15 flex items-center justify-center mb-1 relative z-10">
             <span class="material-symbols-outlined text-2xl">mail</span>
           </div>
-          <span class="font-label uppercase tracking-[0.2em] text-[11px] font-semibold relative z-10">Confirmar Asistencia</span>
-          <span class="text-[9px] opacity-80 mt-1 italic relative z-10">Tu presencia es el regalo</span>
-        </button>
+          <span class="font-label uppercase tracking-[0.2em] text-[11px] font-semibold relative z-10">Confirmación Cerrada</span>
+          <div class="w-full border-t border-on-primary/20 mt-1"></div>
+          <p class="text-center text-[11px] opacity-90 italic serif-text leading-relaxed relative z-10">
+            Gracias por tu respuesta.<br/>
+            El tiempo para confirmar ya ha concluido.
+          </p>
+        </div>
       </section>
     </main>
 
